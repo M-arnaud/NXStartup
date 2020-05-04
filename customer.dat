@@ -1,0 +1,6 @@
+#if FILE ${CUSTOMER_PP_DIR}\${UGII_VERSION}\${CUSTOMER}\prefixed_env.dat
+#include ${CUSTOMER_PP_DIR}\${UGII_VERSION}\${CUSTOMER}\prefixed_env.dat
+#endif
+
+CUSTOMER=Janus_Dev_FR_NX12
+NX12.0.2.MP08_64Bit = Janus_Dev_FR_NX12

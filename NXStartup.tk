@@ -1,0 +1,4799 @@
+lappend config_data  [list "NXStartup" "NX-Startup-Version 092"]
+################################################################################################
+#                                                                                              #
+#   NX Startup                                                                                 #
+#                                                                                              #
+################################################################################################
+#                                                                                              #
+#	Janus Engineering AG                                                                   #
+#	Gartenstrasse 19                                                                       #
+#	D-71063 Sindelfingen                                                                   #
+#	Deutschland                                                                            #
+#	                                                                                       #
+#	Tel     : +49 7031 75599 - 0                                                           #
+#	Fax     : +49 7031 75599 - 11                                                          #
+#	                                                                                       #
+#	Autor   : JANUS Engineering AG                                                         #
+#	Datum   : 25.10.2005                                                                   #
+#                                                                                              #
+#	Copyright 2005-2018 JANUS Engineering                                                  #
+#                                                                                              #
+#	Die Quellcodes der Programme sind urheberrechtlich geschuetzt und                      #
+#	duerfen ohne Zustimmung von JANUS Engineering weder kopiert noch                       #
+#	fuer andere Zwecke weiterverwendet werden.                                             #
+#                                                                                              #
+#	The source codes of the programs are in copyright protected and                        #
+#	may be copied without agreement by JANUS Engineering neither nor                       #
+#	re-used for other purposes.                                                            #
+#                                                                                              #
+# 	Le contenu de ces programmes sont protégés par copyright et ne                         #
+#	peuvent pas être copiés ou réutilisés sans l'agrément de JANUS Enginnering             #
+#                                                                                              #
+################################################################################################
+#                                                                                              #
+# Last changes: 25.10.2005 - COE 00 Initial Release and Installation                           #
+#               04.01.2009 - UR  01 include the switch for 32/64Bit                            #
+#               19.11.2009 - UR  02 include the switch for Post/Machine                        #
+#               21.12.2009 - UR  03 include the switch for MKE                                 #
+#               28.01.2010 - UR  04 bugfix at toggle switch                                    #
+#               13.06.2010 - UR  05 include function to output information "SENT TO CUSTOMER"  #
+#               10.05.2011 - UR  06 added $env(UGS_LICENSE_SERVER) as default                  #
+#               22.05.2011 - UR  07 added more applications                                    #
+#               05.06.2011 - UR  08 added more applications                                    #
+#               06.06.2011 - UR  09 bugfix because error befor NX6 at runtime                  #
+#               29.02.2011 - UR  10 change file attribute -hidden for eclipse                  #
+#               30.04.2012 - MAN 11 supporting mouse wheel on vertical scrollbars              #
+#               02.05.2012 - UR  12 change version query and new administrative *.jel license  #
+#                                   change selectmode at listbox to single                     #
+#                                   smarter version of the query from bachtfiles               #
+#                                   bugfix with the pointer when you worked with s.t.c. befor  #
+#                                   reduction of switches and therefore menus                  #
+#               04.05.2012 - UR  13 together discussed environment variable removed            #
+#               18.10.2012 - UR  14 optimization for the licensecall at "SENT TO CUSTOMER"     #
+#               29.11.2012 - UR  15 optimization for JE_LICENSE_FILE_x environment             #
+#               27.03.2013 - UR  16 added more selectable languages                            #
+#		11.04.2013 - MAN 17 added ListboxQuicSelection by pressing first letter        #
+#		16.04.2013 - UR  18 add switch for folder representation without checks        #
+#				    remove eclipse stuff and other details that we not needed  #
+#		06.05.2013 - UR  19 add option for the licenceserver an some other changes     #
+#                                   adjustments to international requirements                  #
+#		08.05.2013 - UR  20 eliminate (?q) at format_path_names -> failure at UNC      #
+#                                   add update mechanism and some minor modifications          #
+#               13.05.2013 - COE 21 xml_version replaced by customerversion                    #
+#               13.05.2013 - UR  22 bugfix for update in timeframe 0-9h                        #
+#               15.07.2013 - UR  23 add DP to the userlist                                     #
+#               15.07.2013 - UR  24 add IP for Schulung-LS                                     #
+#               15.07.2013 - UR  25 change IP for Schulung-LS to LIC-S-LS-01 (new Server)      #
+#		28.07.2013 - UR  26 enhancements for change 17 (ListboxQuicSelection), 	       #
+#				    because wrong customer at startup defined                  #
+#		25.08.2013 - UR  27 add function to load a release version to check            #
+#		23.10.2013 - UR  28 check if flag(folderfreeze) exits                          #
+#               25.11.2013 - UR  29 add HES option for poolpath                                #
+#               09.12.2013 - UR  30 add hotkey Return - Execute / F1 - Help / F8 - Update      #
+#               11.02.2014 - UR  31 delete JS_BITMAP_PATH to set it as custom level            #
+#               04.03.2014 - MAN 32 updated to new environment variables                       #
+#		30.05.2014 - UR  33 executable for NX10                                        #
+#		13.06.2014 - SSO 34 Set variable base_bitmap_path from                         #
+#				    H:\\JE_Bitmaps to H:\\JE_Bitmap                            #
+#               19.09.2014 - MAN 35 no more error if NX_dir is empty @ pickup                  #
+#		09.10.2014 - UR  36 add Beyond Compare 4                                       #
+#		28.12.2014 - UR  37 add context menu to change the cutomer environment         #
+#		06.01.2014 - COE 38 proc versionlist:                			       #
+#					format_string only if !$folder_representation          #
+#		07.01.2015 - UR  39 remove AK/TK from the Training licence                     #
+#		10.01.2015 - UR  40 add button tool_database and leave open                    #
+#		27.01.2015 - UR  41 add APP-AUTOTEST-01                                        #
+#		29.01.2015 - COE 42 added creatio of autotesting template                      #
+#		22.02.2015 - UR  43 bugfix to store menu default settings                      #
+#		29.04.2015 - COE 44 changed base_parent_path to D:\\Siemens for 	       #
+#						Swiss installation			       #
+#		02.06.2015 - UR  45 IP address correction                                      #
+#		04.06.2015 - BM  46 base_parent_path D:\\Siemens			       #
+#		06.06.2015 - HS  47 Support the Linker pathenames as well                      #
+#		09.07.2015 - COE 48 Bugfix for simpl_chinese language setting                  #
+#		18.03.2016 - UR  49 Add Jochen Bellingen                                       #
+#		09.08.2016 - UR  50 Expansion to support NX11                                  #
+#		11.08.2016 - UR  51 Increasing the speed to open the dialogue                  #
+#		19.08.2016 - UR  52 Reaction to ENV based from the system                      #
+#		22.08.2016 - UR  53 Smaller Bugfix for ENV handling                            #
+#		17.10.2016 - UR  54 Support NX11 with NXBIN > MP0			       #
+#		20.10.2016 - UR  55 Bugfix for the CH ENV           			       #
+#		28.02.2017 - MAN 56 Add JE_POOL_NGMK_CONTENT                                   #
+#		28.03.2017 - UR  57 Change to JED.local Fileshare structure		       #
+#		06.08.2017 - UR  58 Standardization of structures between CH and DE            #
+#		07.08.2017 - AK  59 Added support for teamcenter based NX startup              #
+#		10.08.2017 - COE 60 Added compare_start to context menu                        #
+#		24.08.2017 - MAN 61 Added Option Cockpit to start menu. cockpit.jec must be    #
+#			     present in the customer folder (like custom_env or load_options)  #
+#		07.09.2017 - UR  62 Add variables for the Autotest                             #
+#		08.11.2017 - UR  63 Remove definition UGII_GROUP_DIR from Startup              #
+#			     create folder for UGII_LOCAL_USER_DEFAULTS                        #
+#		30.11.2017 - UR  64 Correction to see the titel information                    #
+#		12.01.2018 - MW  65 bug proc now_customer optimized and close file pointer     #
+#			            add new procs ChangeNxHistory, getLastCustomer and         #
+#				    setLastCustomer					       #
+#		25.01.2018 - UR  66 Add cutomer linking                                        #
+#		29.01.2018 - UR  67 Add possibility to switch to the training startup          #
+#		15.06.2018 - UR  68 Cleanup Startup                                            #
+#				    Speedup the tool, Eliminate 32Bit, Fix some smaller Bugs   #
+#		21.06.2018 - UR  69 Set windowshigh to an variable                             #
+#		21.06.2018 - UR  70 Bugfix, Customers are deleted                              #
+#		25.06.2018 - UR  71 Bugfix, to support UltraEdit                               #
+#		26.06.2018 - UR  72 Bugfix, Customers are deleted                              #
+#		26.06.2018 - UR  73 Change Variable filename to filenameexplorer               #
+#				    Add TKUpdate silent                                        #
+#		27.06.2018 - UR  74 Change Numberrepresentation at the Updatedialog            #
+#		18.07.2018 - MW  75 added Function to context menu to open customer folder     #
+#				    with visual studio code                                    #
+#		06.08.2018 - UR  76 Add more information to the update dialog                  #
+#		18.09.2018 - UR  77 Remove handling for UGII_POST_POOL_DIR_NG_RELEASE          #
+#		26.11.2018 - UR  78 Support for 1847/72                                        #
+#		27.11.2018 - UR  79 UI Update                                                  #
+#		29.11.2018 - MAN 80 Speedup network check by first checking file exists on srv #
+#		11.01.2019 - UR  81 Add funtionality to enhance the menu based on a config     #
+#		22.01.2019 - MAN 82 remove again change from V80, fix support for NX18xx       #
+#		28.02.2019 - UR  83 Bugfix funtionality to enhance the menu based on a config  #
+#		08.03.2019 - MW  84 remove JE_TC_STARTUP                                       #
+#		08.03.2019 - MW  85 add managed mode TIO System                                #
+#		08.03.2019 - MW  86 add reset TIO                                              #
+#		22.03.2019 - UR  87 Change Icon and Tskbar for TeamCenter integration          #
+#		25.03.2019 - UR  88 Rework for MP's of the new NX                              #
+#		25.03.2019 - UR  89 Bugsix if P:/PP/Tools/TIO not available                    #
+#		16.04.2019 - UR  90 Bugsix if only NX**** directory exists                     #
+#		18.04.2019 - UR  91 Add JE_BASE_RELEASE_VERSION JE_RELEASE_VERSION             #
+#		11.06.2019 - UR  92 Allow Foldername 'NX' for the Continuous Release           #
+#                                                                                              #
+################################################################################################
+#   Bitte neue Versionsnummer eintragen in die NXStartup.info - Mechanismus für Autoupdate     #
+################################################################################################
+
+# namespace for TC managed mode start with TIO
+namespace eval ::JETIO {
+	variable runNow 0
+	variable path "P:\\PP\\Tools\\TIO\\"
+	variable serverpath "\\\\JED.local\\JEx\\MachineKits\\PP\\Tools\\TIO\\"
+}
+
+set windowswidth 352
+set windowshigh 588
+
+# Path for BeyondCompare
+set beyond_compare 		[file join $env(ProgramFiles\(x86\)) "Beyond Compare 4" "BCompare.exe"]
+if {![file exists $beyond_compare]} {
+	set beyond_compare 	[file join $env(ProgramW6432) "Beyond Compare 4" "BCompare.exe"]
+} elseif {![file exists $beyond_compare]} {
+	set beyond_compare 	[file join $env(ProgramFiles) "Beyond Compare 4" "BCompare.exe"]
+} elseif {![file exists $beyond_compare]} {
+	set beyond_compare 	[file join $env(ProgramFiles\(x86\)) "Beyond Compare 3" "BCompare.exe"]
+} elseif {![file exists $beyond_compare]} {
+	set beyond_compare 	[file join $env(ProgramFiles) "Beyond Compare 3" "BCompare.exe"]
+}
+
+# Path for UltraEdit
+set ultraedit 			[file join $env(ProgramFiles\(x86\)) "IDM Computer Solutions" "UltraEdit" "uedit64.exe"]
+if {![file exists $ultraedit]} {
+	set ultraedit 		[file join $env(ProgramW6432) "IDM Computer Solutions" "UltraEdit" "uedit64.exe"]
+} elseif {![file exists $ultraedit]} {
+	set ultraedit 		[file join $env(ProgramFiles) "IDM Computer Solutions" "UltraEdit" "uedit64.exe"]
+} elseif {![file exists $ultraedit]} {
+	set ultraedit 		[file join $env(ProgramFiles\(x86\)) "IDM Computer Solutions" "UltraEdit" "uedit32.exe"]
+} elseif {![file exists $ultraedit]} {
+	set ultraedit 		[file join $env(ProgramFiles) "IDM Computer Solutions" "UltraEdit" "uedit32.exe"]
+}
+
+# Path for NXStartup
+#set base_parent_path "D:\\Siemens"
+set base_parent_path "D:\\Program Files\\Siemens"
+if {[info exists env(JE_BITMAP)] && [string length $env(JE_BITMAP)] > 0} {
+	set base_bitmap_path $env(JE_BITMAP)
+} else {
+	tk_messageBox -icon error -type ok -title  "Error at $env(JE_BITMAP)" -message "Folder ENV for BITMAP not defined!"
+}
+if {[info exists env(JE_PRODUCTS)] && [string length $env(JE_PRODUCTS)] > 0} {
+	set base_product_path $env(JE_PRODUCTS)
+} else {
+	tk_messageBox -icon error -type ok -title  "Error at $env(JE_PRODUCTS)" -message "Folder ENV for PRODUCTS not defined!"
+}
+if {[info exists env(JE_CUSTOMER)] && [string length $env(JE_CUSTOMER)] > 0} {
+	set customer_dir_path $env(JE_CUSTOMER)
+} else {
+	tk_messageBox -icon error -type ok -title  "Error at $env(JE_CUSTOMER)" -message "Folder ENV for CUSTOMER not defined!"
+}
+
+set customer_machdir_path "M:\\1-development"
+if {[info exists env(JE_POOL)] && [string length $env(JE_POOL)] > 0} {
+	set base_pool_path $env(JE_POOL)
+} else {
+	tk_messageBox -icon error -type ok -title  "Error at $env(JE_POOL)" -message "Folder ENV for POOL not defined!"
+}
+if {[info exists env(JE_POOL_NGMK)] && [string length $env(JE_POOL_NGMK)] > 0} {
+	set base_pool_path_ng $env(JE_POOL_NGMK)
+} else {
+	tk_messageBox -icon error -type ok -title  "Error at $env(JE_POOL_NGMK)" -message "Folder ENV for POOL_NGMK not defined!"
+}
+if {[info exists env(JE_POOL_NGMK_CONTENT)] && [string length $env(JE_POOL_NGMK_CONTENT)] > 0} {
+	set base_content_path_ng $env(JE_POOL_NGMK_CONTENT)
+} else {
+	tk_messageBox -icon error -type ok -title  "Error at $env(JE_POOL_NGMK_CONTENT)" -message "Folder ENV for POOL_NGMK_CONTENT not defined!"
+}
+
+if {$tcl_version < "8.4"} {
+	tk_messageBox -icon error -type ok -title  "Error" -message "Wrong tcl version ($tcl_version). You need at least tcl 8.4"
+	#exit
+}
+
+set root .
+set base ""
+
+set home_parent_file		[file rootname [file tail [info script]]]
+set home_parent_path		[file nativename [file dirname [info script]]]
+
+# Licenceserver, for e.g. students, we use our optional training licenses
+lappend licenceserver "\%COMPUTERNAME\%"
+foreach e {Janus Diego Autotest} {
+	if {[string match -nocase $env(USERNAME) $e]} {
+		set licenceserver 		"JEX-TR-NX-01"
+	}
+}
+
+if {[string match -nocase $env(USERNAME) "Autotest"]} {set base_parent_path "C:\\Siemens"}
+
+set nxstartup			"$home_parent_path\\"
+set mke_subdir		   	"\\MACH\\machining_knowledge_editor\\bin\\MkEditor.exe"
+set postbuilder_subdir   	"\\POSTBUILD\\post_builder.bat"
+set cmd_subdir		   	"$env(ComSpec)"
+set configurator_subdir_1  	"C:\\Program Files (x86)\\Tecnomatix\\MachineConfigurator\\MachineConfigurator.exe"
+set configurator_subdir_2  	"D:\\Siemens\\Tecnomatix\\MachineConfigurator\\MachineConfigurator.exe"
+if {[file exists $configurator_subdir_1]} {
+	set configurator_subdir $configurator_subdir_1
+} else {
+	set configurator_subdir $configurator_subdir_2
+}
+#set lmtools_subdir	   	"$base_parent_path\\License Server\\lmtools.exe"
+set lmtools_subdir	   	"$base_parent_path\\PLMLicenseServer\\lmtools.exe"
+set services_subdir	  	"$env(SystemRoot)\\System32\\services.msc"
+set licenceoption_subdir 	"\\UGII\\licensing_tool.exe"
+set licenceoption_subdir_new	"\\NXBIN\\licensing_tool.exe"
+set licenceoption_subdir_new	"\%JE_LICENSE_FILE_TOOL\%"
+set server			"\\\\JED.local\\JEx\\MachineKits\\Customer\\"
+set xml_path			[file join $customer_dir_path "Customer_XML"]
+set xml_script_path	  	[file join $xml_path "Script"]
+set xml_all_path		[file join $xml_path "All"]
+
+set flag(debug_startup)		0
+set flag(mainversion) 		5
+set flag(cleanupversion)	96
+
+if {![file isdirectory $xml_path]} {
+	set error [file mkdir $xml_path]
+}
+if {![file isdirectory $xml_script_path]} {
+	set error [file mkdir $xml_script_path]
+}
+if {![file isdirectory $xml_all_path]} {
+	set error [file mkdir $xml_all_path]
+}
+
+proc format_path_names {pathname {exclusion 0} {forced 0} {escape 0}} {
+
+	set slash "/"
+
+	if {[regexp -nocase -- {^[\\\\]|^[\/\/]} $pathname]} {
+		regsub -all "/" $pathname "\\" pathname
+	}
+
+	if {[string match "*windows*" $::tcl_platform(platform)] && $forced  == 0 || $forced == 1} {
+		if {$exclusion} {set pathname "$pathname$slash"}
+		regsub -all "/" $pathname "\\" pathname
+		if {![regexp -nocase -- {^[\\\\]} $pathname]} {set unc 0} else {set unc 1}
+		while {[regsub -- "(?q)\\\\" $pathname "\\" pathname]} {}
+		if {$unc} {set pathname "\\$pathname"}
+		if {$exclusion == 2} {regsub -all "(?q)\\" $pathname "\\\\" pathname}
+	} elseif {![string match "*windows*" $::tcl_platform(platform)] && $forced == 0 || $forced == 2} {
+		if {$exclusion} {set pathname "$pathname$slash"}
+		regsub -all "\\\\" $pathname "/" pathname
+		if {![regexp -nocase -- {^[//]} $pathname]} {set unc 0} else {set unc 1}
+		while {[regsub -- "(?q)//" $pathname "/" pathname]} {}
+		if {$unc} {set pathname "/$pathname"}
+	}
+
+	if {$escape} {regsub -all "\\\\" $pathname "\\\\\\\\" pathname}
+
+	return [string trim $pathname]
+
+}
+
+# Filename for NXStartup
+set customer_file	  	[format_path_names [file join $nxstartup "customer.dat"]]
+set modify_file	   		[format_path_names [file join $nxstartup "startup" "modify.men"]]
+set default_file	  	[format_path_names [file join $nxstartup "default.dat"]]
+set change_file	   		[format_path_names [file join $nxstartup "change_customer.dat"]]
+set universal_file		[format_path_names [file join $nxstartup "nx_universal.bat"]]
+set startbatch_file   		[format_path_names [file join $nxstartup "nx_janus.bat"]]
+set nxstartup_file	   	[format_path_names [file join $nxstartup "nx_universal.bat"]]
+set compare_file	  	[format_path_names [file join $xml_script_path "Compare.txt"]]
+set logfile		   	[format_path_names [file join $nxstartup "${home_parent_file}.log"]]
+set appData_file		[format_path_names [file join $nxstartup "appData.dat"]]
+
+# List of Variables
+set lang 			{german english french italian simpl_chinese trad_chinese japanese korean braz_portuguese russian spanish}
+set debug 			{nein ja}
+set xml 			{nein ja}
+set install_dir_prefix 		""
+set install_dir_suffix 		"Bit"
+set customerversion 		""
+set width 			50
+set bit 			""
+set flag(bitversionline) 	0
+set search 			""
+set version 			""
+set radioindicator 		""
+set default_user 		""
+set customer_string 		""
+set flag(explorer) 		0
+set flag(cockpit) 		0
+set flag(history) 		0
+set flag(compare) 		0
+set flag(leaveopen) 		0
+set flag(autotest)		0
+set flag(debug) 		0
+set flag(language) 		1
+set flag(versionline) 		0
+set flag(background) 		0
+set batch_file 			""
+set flag(bitversiononly) 	0
+set subversion 			0
+set qrmversion 			0
+set qrmminor			0
+set mpversion 			0
+set all 			""
+set number 			""
+set nxversion 			""
+set count 			0
+set flag(ok) 			0
+set flag(mke) 			1
+set firstrun 			1
+set nx_base_dirs 		""
+set bitversion(dummy) 		""
+set askversion 			""
+set flag(Janus)			1
+
+#  ListboxQuickSelect --
+#
+#        This command implements quick positioning inside a listbox
+#        with key press. Each key pressed are buffered for the search.
+#
+#        Typical usage is through binding:
+#           bind $listbox <KeyPress> "ListboxQuickSelect %W %A"
+#
+proc ::tk::ListboxQuickSelect {listbox key} {
+	upvar 0 ::ListboxQuickSelect:$listbox data
+
+	if {[string equal $key ""]} {
+		# %A substitute non unicode character by empty string
+		return
+	}
+	set sel [$listbox curselection]
+	if {[llength $sel] > 1} {
+		# Listbox has more than one selected item
+		return
+	}
+
+	# Initialize index where search begin
+	if {[llength $sel] == 1} {
+		set startIndex [lindex $sel 0]
+	} else {
+		set startIndex 0
+	}
+
+	if {[info exists data(searchPrefix)]} {
+		set searchPrefix $data(searchPrefix)
+	} else {
+		set searchPrefix ""
+	}
+
+	if {[string equal -nocase $searchPrefix $key]} {
+		# User presses twice the same key for the first char.
+		# Search the next item which begin with that char (handled below).
+	} else {
+		append searchPrefix $key
+	}
+
+	# Skip current selected item if searchPrefix is one char
+	# and selected item starts with this char.
+	if {[llength $sel] == 1 && [string length $searchPrefix] == 1 && [string match -nocase "$searchPrefix*" [$listbox get $startIndex]]} {
+		incr startIndex
+	}
+
+	# Now search for searchPrefix after current item,
+	# and wrap if not found.
+	foreach {start end} [list $startIndex end 0 $startIndex] {
+		set index $start
+		foreach item [$listbox get $start $end] {
+			if {[string match -nocase "$searchPrefix*" $item]} {
+				set newSelectedIndex $index
+				break
+			}
+			incr index
+		}
+
+		if {[info exists newSelectedIndex]} {
+			# We have found a new item, select it and stop search
+			$listbox selection clear 0 end
+			$listbox selection set $newSelectedIndex
+			$listbox see $newSelectedIndex
+			break
+		}
+	}
+
+	# Bufferize searchPrefix. Discard it in a small delay
+	if {[info exists data(afterId)]} {
+		after cancel $data(afterId)
+	}
+	set data(searchPrefix) $searchPrefix
+	set data(afterId)      [after 500 "unset ::ListboxQuickSelect:$listbox"]
+
+	if {[info exists newSelectedIndex]} {tk::ListboxBeginSelect .customers.custom_list $newSelectedIndex}
+}
+
+proc ::tk::ListboxBeginSelect {w el {focus 1}} {
+	variable ::tk::Priv
+	$w selection clear 0 end
+	$w selection set $el
+	$w selection anchor $el
+	set Priv(listboxSelection) {}
+	set Priv(listboxPrev) $el
+
+	event generate $w <<ListboxSelect>>
+	# check existence as ListboxSelect may destroy us
+	if {$focus && [winfo exists $w]} {
+		focus $w
+	}
+
+	listbox:select .customers.custom_list $el
+
+}
+
+proc listbox:select {W {update 0}} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(debug_startup)} {debug}
+
+	if {!$update} {
+		selection clear -displayof $W
+		selection own -command {} $W
+		selection handle -type UTF8_STRING $W [list [namespace current]::listbox:handle $W]
+		selection handle $W [list [namespace current]::listbox:handle $W]
+	}
+
+	set customer_index  [ .customers.custom_list curselection ]
+	set ::customer_string [ .customers.custom_list get $customer_index ]
+
+	set config_file  [open $customer_file w+]
+
+	puts $config_file "\#if FILE \$\{CUSTOMER_PP_DIR\}\\\${UGII_VERSION}\\\${CUSTOMER}\\prefixed_env.dat"
+	puts $config_file "\#include \$\{CUSTOMER_PP_DIR\}\\\${UGII_VERSION}\\\${CUSTOMER}\\prefixed_env.dat"
+	puts $config_file "\#endif"
+	puts $config_file ""
+	puts $config_file "CUSTOMER=$customer_string"
+
+	.information.info configure -text "$customer_string"; update
+
+	change_attribute "${customer_dir_path}\\${customerversion}\\${customer_string}"
+
+	close $config_file
+
+	set flag(ok) 1
+	check_ok
+
+}
+
+proc create_ueproject {mkname} {
+
+	global flag customer_dir_path customerversion customer_string
+	global lib_pi_pscdefinition
+
+	if {$flag(debug_startup)} {debug}
+
+	if {[regexp -nocase -- {pplib.*} $flag(rel_version,$customerversion,$customer_string,$mkname)]} {
+		tk_messageBox -title "Create UE Project" -message "Not supported for PPLIB Post" -icon error -type ok -parent .
+		return
+	}
+
+	set startpath [format_path_names $flag(srcdir,$customerversion,$customer_string,$mkname) 1 2]
+
+	regexp -nocase {(.*)(/custom/.*/installed_machines/.*)} $startpath tmp cam_post_dir custom_path
+	regsub -all -- {/} $custom_path {\\} custom_path
+
+	#additional directories
+	set cam_post_dir [file join $cam_post_dir custom postprocessor]
+	if {[file exists $cam_post_dir]} {
+		set cam_post_dir "..\\custom\\postprocessor\\"
+	} else {
+		set cam_post_dir ""
+	}
+	set cse_driver_dir ""
+	if {[string match -nocase [file tail $startpath] postprocessor]} {
+		set cse_driver_dir [file join [file dir $startpath] cse_driver]
+		if {[file exists $cse_driver_dir]} {
+			regexp -nocase {.*(/custom/.*/installed_machines/.*)} $cse_driver_dir tmp cse_driver_dir
+			append cse_driver_dir /
+			regsub -all -- {/} $cse_driver_dir {\\} cse_driver_dir
+		} else {
+			set cse_driver_dir ""
+		}
+	}
+
+	#create UE project dir if not yet existing
+	set path [format_path_names [file join $customer_dir_path $customerversion $customer_string] 0 2]
+	set ueprojectpath [format_path_names [file join $path "UEProjects"] 0 2]
+	if {![file exists $ueprojectpath]} {
+		set error [file mkdir $ueprojectpath]
+	}
+	set ueproject [format_path_names [file join $ueprojectpath $mkname.prj] 0 2]
+
+	if {[file exists $ueproject]} {
+		set answer [tk_messageBox -title "UEProjects" -message "$ueproject already exists.\nShould this be overwritten?" -icon question -type yesno -parent .]
+		if {[string match -nocase "no" $answer]} {
+			set answer [tk_messageBox -title "UEProjects" -message "You may now open the Project [format_path_names $ueproject] in UltraEdit." -icon question -type yesno -parent .]
+			if {[string match -nocase "yes" $answer]} {
+				eval exec [auto_execok cmd] [list << "\"$::ultraedit\" \"$path\" /fni \"$ueproject\"\n"] &	
+			}
+			return			
+		}
+	}
+
+	set ueproj "\[Project ID\]\n"
+	append ueproj "\tSignature=UE Proj: v.1\n"
+	append ueproj "\[Project Information\]\n"
+	append ueproj "\tUse Relative Directory=1\n"
+	append ueproj "\tRelative to Project File=1\n"
+	append ueproj "\tFilter=\n"
+	append ueproj "\tInclude Sub Directories=1\n"
+	append ueproj "\tProject Tagfile=\n"
+	append ueproj "\tProject Wordfile=\n"
+	append ueproj "\tProject TpFile=\n"
+	append ueproj "\tCreate Tagfile=0\n"
+	append ueproj "\tFilterU=+ACo-.tcl+ADsAKg-.tk+ADsAKg-.pce+ADsAKg-.pui+ADsAKg-.psc+ADsAKg-.psl+ADsAKg-.cdl+ADsAKg-.def+ADsAKg-.dat+ADsAKg-.dll+ADsAKg-.txt+ADsAKg-.doc+ADsAKg-.docx+ADsAKg-.docm+ADsAKg-.xls+ADsAKg-.xlsx+ADsAKg-.xlsm+ADsAKg-.xml+ADsAKg-.bmp+ADsAKg-.png+ADsAKg-.jpg+ADsAKg-.pdf\n"
+	append ueproj "\[Files\]\n"
+
+	set count 0
+	if {[llength $cam_post_dir]} {
+		append ueproj "$count=$cam_post_dir\n"
+		incr count
+	}
+	append ueproj "$count=..$custom_path\n"
+	incr count
+	if {[llength $cse_driver_dir]} {
+		append ueproj "$count=..$cse_driver_dir\n"
+		incr count
+	}
+
+	set error [list_to_file [split $ueproj "\n"] $ueproject "w" 1]
+
+	set answer [tk_messageBox -title "UEProjects" -message "UEProject for $mkname has been created!\n\nYou may now open the Project [format_path_names $ueproject] in UltraEdit." -icon question -type yesno -parent .]
+	if {[string match -nocase "yes" $answer]} {
+		eval exec [auto_execok cmd] [list << "\"$::ultraedit\" \"$path\" /fni \"$ueproject\"\n"] &	
+	}
+	
+	if {[info exists flag(find_postprocessor,$customerversion,$customer_string)]} {
+		unset flag(find_postprocessor,$customerversion,$customer_string)
+		unset flag(postprocessor,$customerversion,$customer_string)
+	}
+
+}
+
+proc check_senttocustomer {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(debug_startup)} {debug}
+
+	if {[file isdirectory "${customer_dir_path}\\${customerversion}\\${customer_string}\\sent_to_customer"]} {
+		.status.center.ok_button configure -image [image create photo -data $::Icon118]
+	}
+
+}
+
+proc listbox:handle {W offset maxChars} {
+
+	set list {}
+	foreach index [$W curselection] { lappend list [$W get $index] }
+
+	set text [join $list \n]
+	return [string range $text $offset [expr {$offset+$maxChars-1}]]
+
+}
+
+proc start {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(debug_startup)} {catch {debug}}
+
+	if {![file exist $modify_file]} {return}
+
+	set start_file [open $modify_file r]
+
+	while {[gets $start_file Zeile] >= 0} {
+		if {[regexp "TITLE" $Zeile]} {
+			if {[regexp "Bit" $Zeile]} {
+				set version "[lindex $Zeile 1]_[lindex $Zeile 2]"
+				set versioncheck 1
+			} else {
+				set version "[lindex $Zeile 1]"
+				set versioncheck 0
+			}
+			regsub -all "_" $version " " version
+			set version [lindex $version 0]
+			set radioindicator [lsearch -exact $nx_base_dirs $version]
+			regexp -nocase -- {:.(.+$)} $Zeile all default_user
+			set default_user [string trim $default_user]
+			set ::customer_string $default_user
+			break
+		}
+	}
+
+	if {![info exist default_user] || $default_user == ""} {set default_user "_default" ; set customer_string "_default"}
+	if {![info exist radioindicator] || $radioindicator == "" || $radioindicator == "-1"} {set radioindicator 0}
+
+	close $start_file
+	update
+}
+
+# find last started customer if true set lastCustomer to last customer
+proc getLastCustomer {} {
+
+	global flag
+
+	if {$flag(debug_startup)} {debug}
+
+	set selectNXxVersion [lindex $::nx_base_dirs $::radioindicator]
+	# default return value
+	set lastCustomer [file join $::customer_dir_path $::customerversion $::customer_string]
+
+	if {[file exist $::appData_file] == 0} {
+
+		set appdataSiemens [file join [file dirname $::env(appdata)] Local Siemens]
+		set nxVersion [string range $selectNXxVersion 0 5]
+		set error [regsub -all -- {\.} "$nxVersion" "" nxVersion]
+		set appdataSiemens [file join $appdataSiemens $nxVersion]
+
+		if {[file isdirectory $appdataSiemens] == 1} {
+			set historyPax [file join $appdataSiemens history.pax]
+			# delete history.this call is only one time
+			if {[file exists $historyPax] == 1} {
+				file_delete $historyPax
+			}
+		}
+		return $lastCustomer
+	}
+	set filePointer  [open $::appData_file r]
+	while {[gets $filePointer line] >= 0} {
+		if {[regexp "customerHistory=" $line] == 1} {
+			set lastCustomer [lindex [split $line {=}] 1]
+			break
+		}
+	}
+	close $filePointer
+	return $lastCustomer
+}
+# save last started customer
+proc setLastCustomer {} {
+
+	global flag
+
+	if {$flag(debug_startup)} {debug}
+
+	# current selected customer
+	set customerCurrent [file join $::customer_dir_path $::customerversion $::customer_string]
+	set filePointer  [open $::appData_file w]
+	puts $filePointer "customerHistory=$customerCurrent"
+	close $filePointer
+}
+
+set networktime 0
+
+proc tkupdate_silent {} {
+
+	global flag image home_parent_path home_parent_file networktime
+
+	if {$flag(debug_startup)} {debug}
+
+	set local $home_parent_path
+	set server "\\\\JED.local\\JEx\\MachineKits\\Products\\NXStartup\\"
+
+	set local_startup 	[file join $local "${home_parent_file}.tk"]
+	set local_info 		[file join $local "${home_parent_file}.info"]
+	set local_log 		[file join $local "${home_parent_file}.log"]
+
+	# Check if the last run > 8h, if yes we have to search for a new vesion
+	if {[file exists $local_startup] && [file exists $local_log]} {
+		set time_startup 	[file mtime $local_startup]
+		set time_log 		[file mtime $local_log]
+		if {[expr ($time_startup-$time_log)/60.0] < 720.0} {return}
+	}
+
+	file rename -force $local_log ${local_log}.bak
+	file rename -force ${local_log}.bak $local_log
+	.bitversionline.title configure -background grey40; update
+
+	set networktime 100 ; set result ""
+	catch {set result [exec ping -n 1 -w 20 10.10.10.61]}
+	regexp -nocase -- {(Time|Zeit|Temps).([0-9]+)} $result all string networktime
+	if {$networktime > 20} {
+		return
+	}
+
+	exec [file join [wish]] [file join $local_startup] quiet &
+	while {![file exists $local_info]} {after 100}
+
+	set server_startup 	[file join $server "NXStartup.tk"]
+	set server_info 	[file join $server "NXStartup.info"]
+
+	set local_value [string trim [lindex [file_to_list $local_info] 0]]
+	set server_value [string trim [lindex [file_to_list $server_info] 0]]
+
+	if {![file isdirectory $server]} {
+	} elseif {[string length $local_value] == 0 || [string length $server_value] == 0 || $local_value >= $server_value} {
+	} else {
+		.information.info configure -text "THERE IS A NEW NX-STARTUP VERSION ($::flag(mainversion).[format %02d [expr $server_value-$::flag(cleanupversion)]]) AVAILABLE" -fg red
+	}
+
+}
+
+proc tkupdate {} {
+
+	global flag image home_parent_path home_parent_file networktime
+
+	if {$flag(debug_startup)} {debug}
+
+	set local $home_parent_path
+	set server "\\\\JED.local\\JEx\\MachineKits\\Products\\NXStartup\\"
+
+	set local_startup 	[file join $local "${home_parent_file}.tk"]
+	set local_info 		[file join $local "${home_parent_file}.info"]
+
+	exec [file join [wish]] [file join $local_startup] quiet &
+	while {![file exists $local_info]} {after 100}
+
+	set server_startup 	[file join $server "NXStartup.tk"]
+	set server_info 	[file join $server "NXStartup.info"]
+
+	set local_value [string trim [lindex [file_to_list $local_info] 0]]
+	set server_value [string trim [lindex [file_to_list $server_info] 0]]
+
+	set local_value "$::flag(mainversion).[format %02d [expr $local_value-$::flag(cleanupversion)]]"
+	set server_value "$::flag(mainversion).[format %02d [expr $server_value-$::flag(cleanupversion)]]"
+
+	after 500
+
+	toplevel .tkupdate
+	wm title .tkupdate "Update ($local_value/$server_value) - TCL([info tclversion])"
+	wm geometry .tkupdate 325x295+250+250
+	label .tkupdate.lab -text "Check for a new Version"
+	if {![file isdirectory $server]} {
+		label .tkupdate.check -text "Can not reach server"
+		button .tkupdate.picture -relief raised -image [image create photo -data $image] -command link -state disabled
+	} elseif {[string length $local_value] == 0 || [string length $server_value] == 0 || $local_value >= $server_value} {
+		label .tkupdate.check -text "There is no new Version available"
+		button .tkupdate.picture -relief raised -image [image create photo -data $image] -command link -state disabled
+	} else {
+		label .tkupdate.check -text "There is a new version ($server_value) available"
+		button .tkupdate.picture -relief raised -image [image create photo -data $image] -command link -state active
+	}
+	button .tkupdate.but -text "Close" -width 26 -fg #000000 -bg #E2E2E2 -command "file_delete $local_info ; destroy .tkupdate"
+	if {$networktime <= 30} {
+		label .tkupdate.wan -text "Your access to the network requires ${networktime}ms\nAutomatic check for update is enabled" -fg darkgreen
+	} else {
+		label .tkupdate.wan -text "Your access to the network requires ${networktime}ms\nAutomatic check for update is disabled" -fg firebrick
+	}
+	pack .tkupdate.lab .tkupdate.check .tkupdate.picture .tkupdate.but .tkupdate.wan -padx 5 -pady 5
+
+	settooltip .tkupdate.picture "Update now"
+	settooltip .tkupdate.but "The dialog closed"
+
+}
+
+proc link {} {
+
+	global flag tcl_platform home_parent_path home_parent_file batchbody
+
+	if {$flag(debug_startup)} {debug}
+
+	set batchfile [file join $home_parent_path "${home_parent_file}.bat"]
+	set fid [open $batchfile w+]
+
+	puts $fid "@echo off & setlocal enabledelayedexpansion"
+	puts $fid ""
+	puts $fid "set file=$home_parent_file"
+	puts $fid "set local=$home_parent_path\\"
+	puts $fid "set server=\\\\JED.local\\JEx\\MachineKits\\Products\\NXStartup\\"
+	puts $fid ""
+	puts $fid "set local_startup=%local%${home_parent_file}.tk"
+	puts $fid "set local_info=%local%${home_parent_file}.info"
+	puts $fid ""
+	puts $fid "set server_startup=%server%NXStartup.tk"
+	puts $fid "set server_info=%server%NXStartup.info"
+	puts $fid ""
+	puts $fid "$batchbody"
+	puts $fid ""
+	puts $fid "start \"[wish]\" \"[file join $home_parent_path "${home_parent_file}.tk"]\""
+	puts $fid ""
+	puts $fid "exit"
+
+	flush $fid
+	close $fid
+
+	if {[ catch {
+		if {$tcl_platform(platform) == "windows"} {
+			set error [exec cmd /c start [file join $batchfile] &]
+			exit
+		}
+	} Err ]} {
+		tk_messageBox -title "Can not open generated File" -message "Sorry, no update: $Err" -icon error -type ok -parent .
+	}
+
+}
+
+proc check_version {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(debug_startup)} {debug}
+
+	if {![info exist search]} {set search $version}
+
+	update
+
+	find_version
+
+	if {[file isdirectory "$customer_dir_path\\$customerversion\\$customer_string"]} {
+		.information.info configure -text "$customer_string" -fg black
+	} else {
+		.information.info configure -text "-- No customer select --" -fg grey70
+		set flag(ok) 0
+		check_ok
+	}
+
+	if {![file exists "$base_parent_path/$version$mke_subdir"]} {
+		set flag(versionline,2) 0
+	}
+
+}
+
+proc read_default {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(debug_startup)} {debug}
+
+	if {![file exist $default_file]} {return}
+
+	set start_file [open $default_file r]
+
+	while {[gets $start_file Zeile] >= 0} {
+		if {[regexp "DEFAULT" $Zeile]} {
+
+			# Language
+			language_default
+			switch [lindex $Zeile 1] {
+				"german" 		{set flag(language)  0 ; set checkbutton_german 1}
+				"english" 		{set flag(language)  1 ; set checkbutton_english 1}
+				"french" 		{set flag(language)  2 ; set checkbutton_french 1}
+				"italian" 		{set flag(language)  3 ; set checkbutton_italian 1}
+				"simpl_chinese" 	{set flag(language)  4 ; set checkbutton_simpl_chinese 1}
+				"trad_chinese" 		{set flag(language)  5 ; set checkbutton_trad_chinese 1}
+				"japanese" 		{set flag(language)  6 ; set checkbutton_japanese 1}
+				"korean" 		{set flag(language)  7 ; set checkbutton_korean 1}
+				"braz_portuguese"	{set flag(language)  8 ; set checkbutton_braz_portuguese 1}
+				"russian" 		{set flag(language)  9 ; set checkbutton_russian 1}
+				"spanish" 		{set flag(language) 10 ; set checkbutton_spanish 1}
+				default  		{set flag(language)  1 ; set checkbutton_english 1}
+			}
+
+			# Background
+			set flag(background) 0
+			if {[lindex $Zeile 2] == 1} {
+				set flag(background) 1
+			}
+
+			# Explorer
+			set flag(explorer) 0
+			if {[lindex $Zeile 3] == 1} {
+				set flag(explorer) 1
+			}
+
+			# Debug
+			set flag(debug) 0
+			if {[lindex $Zeile 4] == 1} {
+				set flag(debug) 1
+			}
+
+			# Compare
+			set flag(compare) 0
+			if {[lindex $Zeile 5] == 1} {
+				set flag(compare) 1
+			}
+
+			reset_versionline_view [lindex $Zeile 6]
+
+			# Bitversion
+			set flag(bitversionline) 0
+			if {[lindex $Zeile 7] == "1"} {
+				set flag(bitversionline) 1
+			}
+
+			# Leave open
+			set flag(leaveopen) 0
+			if {[lindex $Zeile 8] == 1} {
+				set flag(leaveopen) 1
+			}
+
+			# Autotest
+			set flag(autotest) 0
+			if {[lindex $Zeile 9] == 1} {
+				set flag(autotest) 1
+			}
+
+			# Cockpit
+			set flag(cockpit) 0
+			if {[lindex $Zeile 10] == 1} {
+				set flag(cockpit) 1
+			}
+
+			# history
+			set flag(history) 0
+			if {[lindex $Zeile 11] == 1} {
+				set flag(history) 1
+			}
+
+			# projects
+			set flag(projects) 0
+			if {[lindex $Zeile 13] == 1} {
+				set flag(projects) 1
+			}
+			break
+		}
+	}
+
+	close $start_file
+
+	update
+}
+
+proc file_to_list {filename} {
+
+	global flag
+
+	if {$flag(debug_startup)} {catch {debug}}
+
+	if {![file exists $filename]} {return ""}
+
+	set id [open $filename r]
+	set content [read $id]
+	set content [split $content "\n"]
+	close $id
+
+	return $content
+
+}
+
+proc list_to_file {list filename {action w+} {directclose 0}} {
+
+	if {[file exist $filename]} {set error [file delete -force $filename]}
+
+	set fileid [open $filename $action]
+	foreach e $list {
+		puts $fileid $e
+	}
+
+	if {$directclose} {
+		catch {flush $fileid}
+		set check [catch {close $fileid}]
+	} else {
+		LIB_PI_close_file $fileid
+	}
+
+}
+
+proc file_delete {file} {
+
+	global flag customerdirectory
+
+	if {$flag(debug_startup)} {debug}
+
+	if {[string length [string trim $file]] <= 1} {return}
+
+	if {![string match $customerdirectory [format_path_names $file]]} {
+		file delete -force $file
+	} else {
+		tk_messageBox -icon error -type ok -title  "Error" -message "Don't delete the customerdata '[format_path_names $file]'"
+	}
+
+}
+
+set env_print_file ""
+set version_info(dummy) ""
+
+proc ask_version {version {result "ALL"}} {
+
+	global flag env base_parent_path env_print_file version_info
+
+	if {$flag(debug_startup)} {debug}
+
+	set file [file join $base_parent_path\\$version\\NXBIN\\env_print.exe]
+	if {![file exist $file]} {
+		set file [file join $base_parent_path\\$version\\UGII\\env_print.exe]
+	}
+	if {[info exists version_info($version)]} {
+		return $version_info($version)
+	}
+	set version_info(dummy) $version
+
+	if {[file exists $file]} {
+		set check 0
+		set active [string match $file $env_print_file]
+		regexp {[0-9]+.[0-9+]} $version check
+
+		if {$check > 10} {
+			if {!$active} {set result [exec $file -m]}
+		} elseif {$check > 4} {
+			set result [exec $file -m]
+		} else {
+			set result [exec $file -n]
+		}
+
+		# Bug at NX8
+		if {[string match "r" [string trim [lindex $result 2] ","]]} {
+			set version "[lindex $result 0][lindex $result 1] [string trim [lindex $result 3] ","]"
+		} else {
+			set version "[lindex $result 0][lindex $result 1] [string trim [lindex $result 2] ","]"
+		}
+
+		if {$check > 4 && [string trim $version] == ""} {
+			if {!$active} {set result [exec $file -n]}
+			set version "[lindex $result 0][lindex $result 1] MP0"
+		}
+
+		switch $result {
+			"ALL" 		{set version_info($version_info(dummy)) $version ; return $version}
+			"NUMBER" 	{regexp {[0-9]+\.[0-9]+} $version number ; return [eliminate_zero $number 1]}
+		}
+
+		return $version
+
+	}
+}
+
+set version_base_info(dummy) ""
+
+proc ask_base_version {version {result "ALL"}} {
+
+	global flag env base_parent_path home_parent_file env_print_file version_base_info
+
+	if {$flag(debug_startup)} {catch {debug}}
+
+	set file [file join $base_parent_path\\$version\\NXBIN\\env_print.exe]
+	if {![file exist $file]} {
+		set file [file join $base_parent_path\\$version\\UGII\\env_print.exe]
+	}
+	if {[info exists version_base_info($version)]} {
+		return $version_base_info($version)
+	}
+	set version_base_info(dummy) $version
+
+	if {[file exists $file]} {
+		set check 0
+		set active [string match $file $env_print_file]
+		regexp {[0-9]+.[0-9+]} $version check
+
+		set result ""
+		if {$check > 12 || $check == 0} {
+			set result [exec $file NX_COMPATIBLE_BASE_RELEASE_VERSION]
+		}
+
+		set version_base_info($version_base_info(dummy)) $result
+
+		return $result
+
+	}
+}
+
+proc pickup {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(debug_startup)} {catch {debug}}
+
+	cd "$base_parent_path"
+
+	set bitsave $bit
+
+	foreach i [lsort -dictionary [glob -nocomplain -directory $base_parent_path -type d *]] {
+
+		set i [file tail $i]
+		if {[regexp -nocase -- {^([UGSNX]+([0-9]+)?\.?([0-9])?(\.[0-9])*?(\.MP[0-9]+)?)\_?((32|64)?(Bit|BIT)?)$} $i]} {
+
+			if {[info exists check]} {unset check}
+			regexp -nocase -- {([0-9]+\.[0-9])} $i all check
+			if {![info exists check]} {regexp -nocase -- {([0-9]+\.?[0-9]?)} $i all check}
+			if {[info exists check]} {regexp -nocase -- {([0-9]+)\.[0]} $check all check}
+
+			if {![info exists check]} {
+				set check_release_version [ask_base_version $i]
+				set check [ask_version $i]
+			} elseif {[info exists check] && $check > 12} {
+				set check_release_version [ask_base_version $i]
+			} else {
+				set check_release_version $check
+			}
+
+			if {![file isdirectory "$customer_dir_path\\v$check_release_version"]} {continue}
+
+			cd "$base_parent_path\\$i"
+
+
+			set dirlist ""
+			set error [catch {set dirlist [glob *]}]
+
+			foreach a $dirlist {
+
+				if {[regexp -nocase -- {^[ADMIN]} $a]} {
+
+					if {[regexp -nocase -- {^[A-Z]} $i]} {
+						regexp -nocase -- {^([UGSNX]+([0-9]+)?\.?([0-9])?(\.[0-9])*?(\.MP[0-9]+)?)\_?((32|64)?(Bit|BIT)?)$} $i all nx number subversion qrmversion mpversion bit
+
+						if {[string length $env(LOCALAPPDATA)] > 0} {
+							set appdata [file join $env(LOCALAPPDATA) Siemens "NX$number$subversion"]
+						} else {
+							set appdata [file join $env(USERPROFILE) "Local Settings" "Application Data" Siemens "NX$number$subversion"]
+						}
+						if {![file isdirectory $appdata]} {
+							catch {file mkdir $appdata}
+						}
+
+						if {![info exist nx] || ![regexp -nocase -- {[0-9|A-Z]} $nx] } {
+
+							set nx $i
+
+							if {[info exist nx_base_dirs] && [lsearch -exact $nx_base_dirs $i] >= 0} {break}
+							lappend nx_base_dirs $i
+
+						} else {
+
+							if {[info exist nx_base_dirs] && [lsearch -exact $nx_base_dirs $nx] >= 0} {break}
+							lappend nx_base_dirs $nx
+
+						}
+
+
+					}
+					break
+				}
+			}
+		}
+
+	}
+
+	set bit $bitsave
+
+	update
+}
+
+set sub_character     "§"
+set std_left_justify  "<"
+set std_right_justify ">"
+
+#_______________________________________________________________________________
+#
+# Formatting of an output string
+# f - Format string
+# t - Output text as a list of strings
+#
+# Format string will be defined as following
+# | >>>> __ <<<< +++ <<< |
+# where | __ +++ are characters which wil be used as they are
+# >>>>  format of first  text - right justification character to be defined in std_right_justify
+# <<<<  format of second text - left justification character to be defined in std_left_justify
+# >>>>>' '<<<<< special formatting to output the text centered, "' '" will be replaced with nothing
+# textstrings will be truncated if they are longer than the according format string
+#
+# set text "The text is centered"
+# set returnvalue [format_string "<<<<< <<<<< >>>>> >>>>>' '<<<<<" [list "Text" "1.1234" "mm" [PPLIB_split_string $text "start"] [PPLIB_split_string $text "end"]"]]
+#_______________________________________________________________________________
+proc format_string {f t} {
+
+	global sub_character  ;# substitution character
+	global std_left_justify std_right_justify  ;# characters of format string which define the text justification
+	global flag
+
+	if {$flag(debug_startup)} {debug}
+
+	# analyze format string
+	set lae [string length $f] ;# position of last element (string starts at 0!)
+
+	set anz 0 ;# number of format elements
+	set ipos 0
+
+	for {set i 0} {$i < $lae} {incr i 1} {
+		set pos [string range $f $i $i]  ;# go through string character by character
+		if {$pos == $std_left_justify || $pos == $std_right_justify} {
+			if {$ipos == 0} {
+				# start of a formatstring
+				set ipos 1 ;# Indicator that formatstring has started
+				incr anz 1
+				set eintrag($anz,p) $i
+				if {$pos == $std_left_justify} {
+					set eintrag($anz,b) l ;# left justified
+				} else {
+					set eintrag($anz,b) r ;# right justified
+				}
+
+			}
+
+			# evaluate length as long as s or S is in the string
+			set eintrag($anz,l) [expr $i - $eintrag($anz,p) + 1]
+
+		} else {
+			set ipos 0
+		}
+	}
+
+	# extract text strings out of the list, truncate or fill with blanks
+	set BLANK "                                                                                "
+	set numx 0
+	foreach e $t {
+		incr numx 1
+		#MOM_output_literal "Text Nummer $numx  >$e<"
+		if {$numx > $anz} {
+			# more text than format strings
+			set numx $anz ;# put all on last formatstring
+		}
+		# truncate text or fill with blanks, according to formatstring
+		regsub -all " " $e "$sub_character" e   ;# substitute Blanks for later resubstitution
+		set laes [string length $e]
+		if {$laes > $eintrag($numx,l)} {
+			# String is longer than format
+			# will be truncated automatically in line below
+		} else {
+			if {$eintrag($numx,b) == "l"} {
+				# string is shorter and left justified, fill with blanks to the right
+				set e "$e$BLANK"
+			} else {
+				set tmp [string range $BLANK 0 [expr $eintrag($numx,l) - $laes - 1]]
+				set e "$tmp$e"
+			}
+		}
+
+		set tmp [string range $e 0 [expr $eintrag($numx,l) - 1]]
+		regsub -all "$sub_character" $tmp " " text($numx)
+		#MOM_output_literal "Texteintrag Nr.$numx >$e<  >$text($numx)< Laenge $eintrag($numx,l)"
+	}
+	#MOM_output_literal  "Anzahl Texte $numx Anzahl Formatestrings $anz"
+	# check if enough strings are in the list, if not fill with dummy strings
+	while {$numx < $anz} {
+		incr numx 1
+		set text($numx) [string range $BLANK 0 [expr $eintrag($numx,l) - 1]]
+	}
+
+	# Now fill format string with text according to the evaluated positions, etc.
+	set num 1
+	set out ""  ;# initialize output text (formatted text)
+
+	for {set i 0} {$i <= $lae} {incr i 1} {
+		set pos [string range $f $i $i]  ;# go through string character by character
+		if {$eintrag($num,p) == $i} {
+			# check for next entry, if startposition is reached fill in the text
+			append out $text($num)
+			set i [expr $i + $eintrag($num,l) - 1]    ;# jump to next  character after format field
+			incr num 1 ;# initialize for next entry
+			if {$num > $anz} {
+				# create dummy for rest of calculation
+				set eintrag($num,p) 0
+			}
+		} else {
+			# add other text to output
+			append out $pos
+		}
+	}
+
+	# It is for center output
+	regsub -all "' '" $out "" out
+
+	return $out
+}
+
+
+proc wheelEvent { x y delta } {
+
+	# Find out what's the widget we're on
+	set act 0
+	set widget [winfo containing $x $y]
+
+	if {$widget != ""} {
+		# Make sure we've got a vertical scrollbar for this widget
+		if {[catch "$widget cget -yscrollcommand" cmd]} return
+
+		if {$cmd != ""} {
+			# Find out the scrollbar widget we're using
+			set scroller [lindex $cmd 0]
+
+			# Make sure we act
+			set act 1
+		}
+	}
+	catch {
+		if {$act == 1} {
+			# Now we know we have to process the wheel mouse event
+			set xy [$widget yview]
+			set factor [expr [lindex $xy 1]-[lindex $xy 0]]
+
+			# Make sure we activate the scrollbar's command
+			set cmd "[$scroller cget -command] scroll [expr -int($delta/(120*$factor))] units"
+			eval $cmd
+		}
+	}
+}
+
+proc create_menu_extended {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(debug_startup)} {catch {debug}}
+
+	set custom_config [file join $customer_dir_path $customerversion $customer_string "custom_config.dat"]
+
+	if {[file exists $custom_config]} {
+		if {[info exists flag(create_menu_extended_setting)] && $flag(create_menu_extended_setting) == 1} {return}
+		create_menu_extended_setting 1
+		set flag(create_menu_extended_setting) 1
+	} else {
+		if {[info exists flag(create_menu_extended_setting)] && $flag(create_menu_extended_setting) == 0} {return}
+		create_menu_extended_setting 0
+		set flag(create_menu_extended_setting) 0
+	}
+
+}
+
+proc create_menu_extended_setting {switch} {
+
+	eval global [uplevel #0 info vars]
+
+	if {!$switch} {
+		create_menu
+	} else {
+		create_menu {Application Language Actions Licence Setting Help}
+	}
+
+}
+
+proc custom_config {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(debug_startup)} {debug}
+
+	set list [file_to_list [file join $customer_dir_path $customerversion $customer_string "custom_config.dat"]]
+	foreach e $list {
+		if {[regexp -- {^\s?#} $e]} {continue}
+		if {[regexp -nocase -- {<button>([^<]*)<label>([^<]*)<underline>([^<]*)<variable>([^<]*)<command>([^<]*)} $e all button label underline variable command]} {
+			$Setting add checkbutton -label [string trim $label] -underline [string trim $underline] -variable [string trim [join $variable]] -command "modify_custom set [join [string trim $command]]"
+		}
+		if {[regexp -nocase -- {<separator>} $e]} {
+			$Setting add separator
+		}
+		if {[regexp -nocase -- {(.+)=(.*)} $e all envvar value]} {
+			set line [modify_custom read $envvar]
+			set compare [lindex $line 0]
+			set all [lindex $line 1]
+			set partvariable [split [join $variable] "()"]
+			global [lindex $partvariable 0]
+			set [lindex $partvariable 0]([lindex $partvariable 1],value) [list $envvar $value]
+			set [lindex $partvariable 0]([lindex $partvariable 1],org) "${envvar}=$value"
+			if {[string match $value $compare]} {
+				set ::[string trim [join $variable]] 1
+			} else {
+				set ::[string trim [join $variable]] 0
+			}
+		}
+	}
+	update
+}
+
+proc create_menu {{options ""}} {
+
+	eval global [uplevel #0 info vars]
+
+	destroy $base.menu
+
+	menu $base.menu
+	$root config -menu $base.menu
+	if {[string length $options] == 0} {
+		if {[info exists env(JE_DEVELOPMENT)] && [string match "JANUS" $env(JE_DEVELOPMENT)]} {
+			set menu {Application Language Actions Licence Help}
+		} else {
+			set menu {Application Language Actions Help}
+		}
+		set flag(menu) 0
+	} else {
+		set menu $options
+		set flag(menu) 1
+	}
+
+	foreach m $menu {
+		# Use [string tolower] to ensure magic menu names are right - DKF
+		global $m
+		set $m [menu $base.menu.[string tolower $m] -tearoff 0]
+		$base.menu add cascade -label $m -underline 0 -menu [set $m]
+	}
+
+	update idletasks
+
+	if {$flag(menu)} {
+		custom_config
+	}
+
+	$Application add checkbutton -label "Leave Startup open" -underline 0 -variable flag(leaveopen) -command defaultoutput
+	$Application add separator
+	$Application add checkbutton -label "Create Autotest" -underline 1 -variable flag(autotest) -command defaultoutput
+	$Application add checkbutton -label "Create Projects" -underline 1 -variable flag(projects) -command defaultoutput
+	settooltip $Application "The dialog closed"
+	$Application add separator
+	$Application add checkbutton -label "Explorer" -underline 0 -variable flag(explorer) -command defaultoutput
+	$Application add checkbutton -label "Cockpit" -underline 0 -variable flag(cockpit) -command defaultoutput
+	$Application add checkbutton -label "Compare" -underline 0 -variable flag(compare) -command defaultoutput
+	$Application add checkbutton -label "Debug" -underline 0 -variable flag(debug) -command defaultoutput
+	$Application add checkbutton -label "History" -underline 0 -variable flag(history) -command defaultoutput
+	$Application add separator
+	$Application add checkbutton -label "Background" -underline 0 -variable flag(background) -command defaultoutput
+	$Application add separator
+	$Application add command -underline 0 -label "OK" -accelerator {Return} -command now
+	$Application add command -underline 1 -label "Exit" -accelerator {Ctrl + Q} -command cancel
+
+	$Language add checkbutton -label "English" -underline 0 -variable checkbutton_english -command {language english}
+	$Language add checkbutton -label "French" -underline 0 -variable checkbutton_french -command {language french}
+	$Language add checkbutton -label "German" -underline 0 -variable checkbutton_german  -command {language german}
+	$Language add checkbutton -label "Italian" -underline 0 -variable checkbutton_italian -command {language italian}
+	$Language add checkbutton -label "Portuguese" -underline 0 -variable checkbutton_braz_portuguese -command {language braz_portuguese}
+	$Language add checkbutton -label "Spanish" -underline 0 -variable checkbutton_spanish -command {language spanish}
+	$Language add separator
+	$Language add checkbutton -label "Chinese simple" -state active -underline 0 -variable checkbutton_simpl_chinese -command {language simpl_chinese}
+	$Language add checkbutton -label "Chinese traditional" -state active -underline 0 -variable checkbutton_trad_chinese -command {language trad_chinese}
+	$Language add checkbutton -label "Japanese" -state active -underline 0 -variable checkbutton_japanese  -command {language japanese}
+	$Language add checkbutton -label "Korean" -state active -underline 0 -variable checkbutton_korean -command {language korean}
+	$Language add checkbutton -label "Russian" -underline 0 -state active -variable checkbutton_russian -command {language russian}
+
+	if {[file exists [JETIO::CheckEnv "TCManaged.bat"]]} {
+		menu $Actions.managedmode
+			$Actions.managedmode add command -label "Virtual Machine Start" -accelerator {F3} -command {JETIO::Now "startvm"}
+			$Actions.managedmode add command -label "Virtual Machine Stop" -accelerator {F4} -command {JETIO::Now "stopvm"}
+			$Actions.managedmode add command -label "Virtual Machine Status" -accelerator {F5} -command {JETIO::CheckRunning}
+			$Actions.managedmode add command -label "Virtual Machine Reset" -accelerator {F6} -command {JETIO::Now "resetvm"}
+			$Actions.managedmode add separator
+			$Actions.managedmode add command -label "Compare directories" -command {JETIO::Compare}
+			$Actions add cascade -label "Teamcenter" -menu $Actions.managedmode -underline 0
+	}
+
+	$Actions add command -underline 0 -label "MKE" -command {set flag(versionline,2) 1 ; reset_versionline_view 2 ; now 1}
+	$Actions add command -underline 0 -label "PostBuilder" -command {set flag(versionline,3) 1 ; reset_versionline_view 3 ; now 1}
+	$Actions add command -underline 0 -label "CMD" -command {set flag(versionline,4) 1 ; reset_versionline_view 4 ; now 1}
+	$Actions add command -underline 0 -label "Configurator" -command {set flag(versionline,5) 1 ; reset_versionline_view 5 ; now 1}
+	$Actions add command -underline 0 -label "LMTools" -command {set flag(versionline,6) 1 ; reset_versionline_view 6 ; now 1}
+	$Actions add command -underline 0 -label "Services" -command {set flag(versionline,7) 1 ; reset_versionline_view 7 ; now 1}
+	$Actions add command -underline 0 -label "Licences" -command {set flag(versionline,8) 1 ; reset_versionline_view 8 ; now 1}
+	$Actions add separator
+	$Actions add command -underline 1 -label "Execute Training-Startup" -accelerator {F12} -command {training_startup}
+	$Actions add separator
+	$Actions add command -underline 1 -label "Persistent Training Environment" -command {training_startup 1}
+	$Actions add command -underline 1 -label "Remove Training Environment" -command {training_startup 2}
+
+	$Help add command -label Update -accelerator {F8} -command tkupdate
+	$Help add separator
+	$Help add command -label About -accelerator {F1} -command help
+
+	bind . <Control-q> {cancel}
+	bind . <F3> {JETIO::Now "startvm"}
+	bind . <F4> {JETIO::Now "stopvm"}
+	bind . <F5> {JETIO::CheckRunning}
+	bind . <F6> {JETIO::Now "resetvm"}
+	bind . <F8> {tkupdate}
+	bind . <F1> {help}
+	bind . <Return> {now}
+
+}
+
+proc file_is_writable {file} {
+
+	global flag
+
+	if {$flag(debug_startup)} {catch {debug}}
+
+	if {[catch {file rename -force $file $file.temp} err]} {return 0}
+	file rename -force $file.temp $file
+	return 1
+
+}
+
+proc check_file_progress {file} {
+
+	set file [file normalize $file]
+	set size [file size $file]
+
+	after 100
+	while {[file size $file] != $size} {
+		after 100
+	}
+	while {![file_is_writable $file]} {
+		after 100
+	}
+	after 100
+
+}
+
+proc check_file_exists {file} {
+
+	set file [file normalize $file]
+	set check 0
+
+	after 500
+	while {![file exists $file]} {
+		after 500
+		incr check
+		if {$check == 20} {
+			tk_messageBox -icon error -type ok -title  "Error" -message "File doesn't not exists '$file'"
+			return 0
+		}
+	}
+	after 500
+
+}
+
+proc cancel {} {
+
+	eval global [uplevel #0 info vars]
+
+	file_delete [file join $env(TEMP)/${home_parent_file}.txt]
+
+	set batch_file [open $universal_file w+]
+
+	puts $batch_file "exit"
+	close $batch_file
+
+	destroy .listbox
+
+	catch {
+		if {[file exists $filename]} {file_delete $filename}
+		if {[file exists $scriptname]} {file_delete $scriptname}
+	}
+
+	exit
+
+}
+
+proc now_explorer {{call 0} {check 1}} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$check == 1 && !$flag(explorer) || $call} {
+		return
+	}
+
+    set filenameexplorer [file join $customer_dir_path $customerversion $customer_string]
+
+
+	if {$check == 2 || $check == 4} {
+
+           if {$customer_string == "_default"} {
+            		set selectNXxVersion [lindex $::nx_base_dirs $::radioindicator]
+            		set filenameexplorer [file join $base_parent_path $selectNXxVersion MACH resource library machine installed_machines]
+
+            		if {[file isdirectory $filenameexplorer] == 0} {
+                		set filenameexplorer [file join $base_parent_path ${selectNXxVersion}_64BIT MACH resource library machine installed_machines]
+            		}
+        	} else {
+            		set filenameexplorer [file join $customer_dir_path $customerversion $customer_string custom library machine installed_machines]
+        	}
+    	    }
+	if {$check == 3} {
+		if {![file exists $filenameexplorer]} {
+			.status.center.explorer_button configure -image [image create photo -data $::Icon117]
+			return
+		} else {
+			.status.center.explorer_button configure -image [image create photo -data $::Icon116]
+		}
+	}
+
+        if {$check == 5} {set filenameexplorer [file join $customer_dir_path $customerversion $customer_string sent_to_customer library machine installed_machines]}
+	if {$check == 4} {return $filenameexplorer}
+	if {$check == 3} {return}
+	regsub -all "/" $filenameexplorer "\\" filenameexplorer
+	eval exec [auto_execok cmd] [list << "start $filenameexplorer\n"] &
+
+}
+
+proc now_packit {{check 1}} {
+
+	eval global [uplevel #0 info vars]
+
+	set filenameexplorer [now_explorer 0 4]
+		if {![file exists $filenameexplorer]} {
+			.status.center.packit_button configure -image [image create photo -data $::Icon115]
+			return
+		} else {
+			.status.center.packit_button configure -image [image create photo -data $::Icon103]
+		}
+	if {$check == 0} {return}
+
+	catch {set packit  [file join [file dir $env(JE_POOL_NGMK)] NGMK_Pool Utilities Script Shortcut "Update Libraries" Packit.bat]}
+
+	regsub -all "/" $filenameexplorer "\\" filenameexplorer
+	regsub -all "/" $packit "\\" packit
+	# tk_messageBox -icon error -type ok -title  "Error" -message "$packit $filenameexplorer"
+	if {[file exists $packit]} {
+		eval exec "\"[file join $packit]\"" "[file join $filenameexplorer]" &
+	}
+
+}
+
+proc now_VisualStudioCode {{call 0} {check 1}} {
+
+	eval global [uplevel #0 info vars]
+	set codeExeInsider "C:/Program Files/Microsoft VS Code Insiders/Code - Insiders.exe"
+	set codeExe "C:/Program Files (x86)/Microsoft VS Code/code.exe"
+	if {![file exists $codeExeInsider]} {
+
+		if {![file exists $codeExe]} {
+			tk_messageBox -icon info -type ok -title  "Visual Studio Code not installed" -message "you can install from here:\nhttps://code.visualstudio.com\n"
+			return
+		}
+		set codeExeInsider $codeExe
+
+	}
+	eval exec "\"${codeExeInsider}\"" "[file join $customer_dir_path $customerversion $customer_string]" &
+}
+
+proc now_cockpit {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {!$flag(cockpit)} {
+		return
+	}
+
+	set cockpitname [file join $customer_dir_path $customerversion $customer_string "cockpit.jec"]
+	set cockpitpgm ""
+	catch {set cockpitpgm  [file join [file dir $env(JE_POOL)] Tools Tools Cockpit Cockpit.exe]}
+
+	if {[file exists $cockpitname] && [file exists $cockpitpgm]} {
+		regsub -all "/" $cockpitpgm "\\" cockpitpgm
+		regsub -all "/" $cockpitname "\\" cockpitname
+		eval exec [auto_execok cmd] [list << "$cockpitpgm $cockpitname\n"] &
+	}
+
+}
+
+proc now_fileopen {file} {
+
+	global customer_dir_path customerversion customer_string
+
+	set filename [file join "$customer_dir_path/$customerversion/$customer_string/$file"]
+
+	if {![file exists $filename]} {
+		tk_messageBox -icon error -type ok -title  "Error" -message "Can not find file '$filename'"
+		return
+	}
+	regsub -all "/" $filename "\\" filename
+	eval exec [auto_execok cmd] [list << "uedit32.exe $filename\n"] &
+
+}
+
+proc ChangeNxHistory {} {
+
+	global flag
+
+	if {$flag(debug_startup)} {debug}
+
+	if {!$::flag(history)} {
+		return
+	}
+
+	global customer_dir_path customer_string customerversion env
+	set selectNXxVersion [lindex $::nx_base_dirs $::radioindicator]
+	set updateLastCustomer [file join [getLastCustomer] AppData Local Siemens]
+	setLastCustomer
+
+	if {[file isdirectory $updateLastCustomer] == 0} {
+		set error [file mkdir $updateLastCustomer]
+		if {[file isdirectory $updateLastCustomer] == 0} {
+			return
+		}
+	}
+
+	set appdataSiemens [file join [file dirname $env(appdata)] Local Siemens]
+	set nxVersion [string range $selectNXxVersion 0 5]
+	set error [regsub -all -- {\.} "$nxVersion" "" nxVersion]
+	set appdataSiemens [file join $appdataSiemens $nxVersion]
+
+	if {[file isdirectory $appdataSiemens] == 0} { return }
+	set historyPax [file join $appdataSiemens history.pax]
+	# save history from last customer
+	if { [file exists $historyPax] == 1 } {
+		set updateLastCustomerHistoryPax [file join $updateLastCustomer history.pax]
+		set error [file copy -force -- $historyPax $updateLastCustomerHistoryPax]
+	}
+
+	# current selected customer
+	set customerCurrentHistoryData [file join $customer_dir_path $customerversion $customer_string AppData Local Siemens]
+	if {[file isdirectory $customerCurrentHistoryData] == 0} {
+		set error [file mkdir $customerCurrentHistoryData]
+		if {[file isdirectory $customerCurrentHistoryData] == 0} {
+			return
+		}
+	}
+
+	# copy history from current customer to appdata
+	set customerCurrentHistory [file join $customerCurrentHistoryData "history.pax"]
+	if { [file exists $customerCurrentHistory] == 0 } {
+		while {[catch {close [open $customerCurrentHistory {RDWR CREAT EXCL}]}]} {}
+	}
+	if { [file exists $customerCurrentHistory] == 1 } {
+		set error [file copy -force -- $customerCurrentHistory $historyPax]
+	}
+}
+
+proc now_customer {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(debug_startup)} {debug}
+
+	set config_file [open $customer_file a+]
+	set diff "$version = $customer_string"
+
+	while {[gets $config_file Zeile] >= 0} {
+		if {[regexp $diff $Zeile]} {
+			#Kunde ist schon in Datei vorhanden
+			close $config_file
+			return
+		}
+	}
+
+	puts $config_file "$version = $customer_string"
+	close $config_file
+
+}
+
+proc defaultoutput {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(debug_startup)} {debug}
+
+	set default_file_id [open $default_file w+]
+	puts $default_file_id "DEFAULT [lindex $lang $flag(language)] $flag(background) $flag(explorer) $flag(debug) $flag(compare) 0 $flag(bitversionline) $flag(leaveopen) $flag(autotest) $flag(cockpit) $flag(history) $flag(projects)"
+	flush $default_file_id
+	close $default_file_id
+
+	update
+
+}
+
+proc change_attribute {searchpath} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(debug_startup)} {debug}
+
+	set searchpath [file join $searchpath "development"]
+	if {![file isdirectory $searchpath]} {return}
+
+	while {[llength $searchpath] != 0} {
+
+		set name [lindex $searchpath 0]
+		set searchpath [concat [lrange $searchpath 1 end] [glob -nocomplain -directory [lindex $searchpath 0] -type d *]]
+
+		if {[catch {set filelist [glob -directory $name -type f .*]}]} {
+			continue
+		}
+
+		foreach e $filelist {
+			file attribute $e -hidden 0
+		}
+	}
+}
+
+proc JETIO::NewFile {} {
+
+	set fileexecutelocal [JETIO::CheckEnv "TCManaged.bat"]
+	set fileexecuteserver [JETIO::CheckEnv "TCManaged.bat" "serverpath"]
+
+	if {[file isdirectory [file dirname $fileexecuteserver]] && [file isdirectory [file dirname $fileexecutelocal]]} {
+		if {[file exists $fileexecutelocal] && [file exists $fileexecuteserver]} {
+			set filetimelocal [file mtime $fileexecutelocal]
+			set filetimeserver [file mtime $fileexecuteserver]
+			if {$filetimelocal < $filetimeserver} {
+				if {[catch {file rename -force $fileexecutelocal $fileexecutelocal.temp} err]} {
+					tk_messageBox -icon error -type ok -title  "Error" -message "Can not rename $filetimelocal\nErrorcode: $err"
+					return 0
+				}
+				file delete -force $fileexecutelocal
+				file copy -force $fileexecuteserver $fileexecutelocal
+				check_file_progress $fileexecutelocal
+				check_file_exists $fileexecutelocal
+			}
+		}
+	}
+}
+
+proc JETIO::Compare {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {![file exists $beyond_compare]} {return}
+
+	set fileexecutelocal [JETIO::CheckEnv "TCManaged.bat"]
+	set fileexecuteserver [JETIO::CheckEnv "TCManaged.bat" "serverpath"]
+
+	set fileexecutelocal [file dirname $fileexecutelocal]
+	set fileexecuteserver [file dirname $fileexecuteserver]
+
+	set id [open [file join $env(TEMP)/${home_parent_file}.bat] w+]
+	puts $id "\"$beyond_compare\" \"[format_path_names $fileexecutelocal]\" \"[format_path_names $fileexecuteserver]\""
+	close $id
+
+	set error [exec [file join $env(TEMP)/${home_parent_file}.bat] &]
+	after 100
+
+	if {[file exists [file join $env(TEMP)/${home_parent_file}.bat]]} {
+		file_delete [file join $env(TEMP)/${home_parent_file}.bat]
+	}
+
+	update
+
+}
+
+proc JETIO::CheckEnv {fileName {path "path"}} {
+
+	if {[string match "path" $path]} {
+		set fileExecute [file join ${JETIO::path} $fileName]
+	} elseif {[string match "serverpath" $path]} {
+		set fileExecute [file join ${JETIO::serverpath} $fileName]
+	}
+	return $fileExecute
+
+}
+
+set JETIO::VMrunNow 0
+
+proc JETIO::CheckRunning {{action "check"}} {
+
+	JETIO::IsRunning init
+	after 1000
+	if {[JETIO::IsRunning]} {
+		.status.center.ok_buttonManagedMode configure -image [image create photo -data $::Icon119]
+		set ::information "Virtual Machine is available"
+		set JETIO::VMrunNow 1
+	} else {
+		.status.center.ok_buttonManagedMode configure -image [image create photo -data $::Icon120]
+		set ::information "Virtual Machine is not available"
+		set JETIO::VMrunNow 0
+	}
+}
+
+proc JETIO::IsRunning {{action "check"}} {
+
+	set returnvalue 0
+	set fileExecute [JETIO::CheckEnv "TCManaged.bat"]
+	if {![file exists $fileExecute]} {return}
+	set infofile [file join $::env(TEMP) "JETIO.info"]
+	if {![string match "check" $action]} {
+		if {[file exists $infofile]} {catch {file delete -force $infofile}}
+		set fileExecute [JETIO::CheckEnv "TCManaged.bat"]
+		catch {set result [exec cmd.exe /c start /min $fileExecute list &]}
+	} else {
+		set information "Check if Virtual Machine is running"
+		if {[file exists $infofile]} {
+			holding_stack $infofile 500 10
+			after 1000
+			if {[file exists $infofile]} {
+				check_file_progress $infofile
+				set vmlist [file_to_list $infofile]
+				if {[regsub -all "JETIO.vmx" $vmlist "SuperSusi" dummy]} {
+					set returnvalue 1
+				}
+			}
+		}
+
+		if {[file exists $infofile]} {catch {file delete -force $infofile}}
+		return $returnvalue
+	}
+
+}
+
+proc JETIO::Now {{action "startnx"}} {
+
+	global progress
+
+	if { "startnx" == $action } {
+		if {!$JETIO::VMrunNow} {return}
+		set JETIO::runNow 1
+		now
+		set JETIO::runNow 0
+	} else {
+		set fileExecute [JETIO::CheckEnv "TCManaged.bat"]
+		set error [exec cmd.exe /c start /min $fileExecute $action &]
+
+		switch -- $action {
+		  "startvm" 	{
+		  			set progress 0
+		  			set ::information "Start Virtual Machine"
+		  			progress 100 220
+					set progress 0
+		  			set ::information "Wait until services are started"
+		  			progress 100 100
+		  			set progress 0
+		  			progress 0
+					set JETIO::VMrunNow 1
+					set ::information "Check status Virtual Machine"
+					JETIO::IsRunning init
+					after 1000
+					if {![JETIO::IsRunning]} {
+						set ::information "Virtual Machine Services not yet available"
+						tk_messageBox -icon info -type ok -title  "Information" -message "The VM is not yet available.\nThe displayed time is a qualified estimate.\nPlease check activity via VM status query <F5> again after a short moment."
+						return
+					}
+					set ::information "Virtual Machine is running"
+					.status.center.ok_buttonManagedMode configure -image [image create photo -data $::Icon119]
+					set ::information ""
+		  		}
+		  "resetvm" 	{
+					.status.center.ok_buttonManagedMode configure -image [image create photo -data $::Icon120]
+		  			set progress 0
+		  			set ::information "Reset Virtual Machine"
+		  			progress 100 300
+		  			set progress 0
+		  			set ::information "Wait until services are started"
+		  			progress 100 100
+		  			set progress 0
+		  			progress 0
+					set JETIO::VMrunNow 1
+					set ::information "Check status Virtual Machine"
+					JETIO::IsRunning init
+					after 1000
+					if {![JETIO::IsRunning]} {
+						set ::information "Virtual Machine Services not yet available"
+						tk_messageBox -icon info -type ok -title  "Information" -message "The VM is not yet available.\nThe displayed time is a qualified estimate.\nPlease check activity via VM status query <F5> again after a short moment."
+						return
+					}
+					set ::information "Virtual Machine is running"
+					.status.center.ok_buttonManagedMode configure -image [image create photo -data $::Icon119]
+					set ::information ""
+		  		}
+		  "stopvm" 	{
+					set JETIO::VMrunNow 0
+					.status.center.ok_buttonManagedMode configure -image [image create photo -data $::Icon120]
+					set progress 0
+					set ::information "Stop Virtual Machine"
+					progress 100 150
+					set progress 0
+					progress 0
+					set ::information ""
+					return
+				}
+		}
+	}
+
+	if {[JETIO::IsRunning]} {
+		set ::information "Virtual Machine is running"
+		set JETIO::VMrunNow 1
+		.status.center.ok_buttonManagedMode configure -image [image create photo -data $::Icon119]
+	}
+
+}
+
+proc now {{call 0}} {
+
+	eval global [uplevel #0 info vars]
+	global auto_test_file autotest_folder
+	global customer_main_folder
+
+	if {$flag(leaveopen)} {set call 1}
+
+	if {!$flag(ok)} {
+		tk_messageBox -icon error -type ok -title  "Action is not possible..." -message "-- No customer select --"
+		return
+	}
+	
+	if {![string is integer $flag(language)]} {
+		tk_messageBox -icon error -type ok -title  "Action is not possible..." -message "Language to be defined"
+		return		
+	}
+
+	set ::information "Task in progress"
+	progress 30
+
+	file_delete [file join $env(TEMP)/${home_parent_file}.txt]
+
+	ChangeNxHistory
+	now_customer
+	now_cockpit
+	now_explorer $call
+	now_compare
+	now_leaveopen
+
+	modify_custom write
+
+	regsub -all "_" $version " " titel
+
+	set title_file [open $modify_file w+]
+
+	set action "POST"
+
+	set senttocustomer "" ; set background 1
+	regexp -nocase -- {[UGSNX]+([0-9\.]+)} $nxversion all versionnumber
+	regexp -nocase -- {([0-9]+\.[0-9]+)} $versionnumber all versionnumber
+	if {![regexp -- {\.5} $versionnumber]} {set versionnumber [expr int($versionnumber)]}
+
+	if {[info exists ask_base_version] && [string length $ask_base_version] > 0} {
+		set versionnumber $ask_base_version
+	}
+
+	if {[file isdirectory "${customer_dir_path}\\v${versionnumber}\\${customer_string}\\sent_to_customer"]} {
+		set senttocustomer "SENT TO CUSTOMER - "
+		set background 0
+	}
+
+	create_batchfile $versionnumber
+
+	set customer_main_folder "${customer_dir_path}\\v${versionnumber}\\${customer_string}"
+
+	change_attribute $customer_main_folder
+        ###### modification arno
+	puts $title_file "VERSION 120"
+	puts $title_file "EDIT UG_GATEWAY_MAIN_MENUBAR"
+	if {[lindex $lang $flag(language)] == "english"} {
+	        puts $title_file "TITLE $titel - $customer_string- Janus-Engineering@Paris"
+#		puts $title_file "\nTITLE $titel - $action - ${senttocustomer}Customer: $customer_string "
+	} elseif {[lindex $lang $flag(language)] == "french"} {
+	        puts $title_file "TITLE $titel - $customer_string- Janus-Engineering@Paris"
+#		puts $title_file "\nTITLE $titel - $action - ${senttocustomer}Client: $customer_string "
+	} elseif {[lindex $lang $flag(language)] == "italian"} {
+		puts $title_file "\nTITLE $titel - $action - ${senttocustomer}Cliente: $customer_string "
+	} elseif {[lindex $lang $flag(language)] == "german"} {
+		puts $title_file "\nTITLE $titel - $action - ${senttocustomer}Kunde: $customer_string "
+	} else {
+		puts $title_file "\nTITLE $titel - $action - ${senttocustomer}Customer: $customer_string "
+	}
+
+	flush $title_file
+	close $title_file
+
+	progress 30
+
+	defaultoutput
+
+	file copy -force $modify_file [file join $customer_dir_path "v${versionnumber}" "_default" "ugii_site_dir" "startup" "modify.men"]
+
+	set auto_test_file [file join $nxstartup "autotest.bat"]
+
+	set batch_file [open $universal_file w+]
+
+	puts $batch_file "\@echo off"
+
+	puts $batch_file "set CUSTOMER=$customer_string"
+	#####Modifications Arno
+	puts $batch_file "set CustomerName=$customer_string"
+	puts $batch_file "set UGII_CAM_POST_CONFIGURATOR_INSPECT_TOOL_PREVIEW=1"
+	puts $batch_file "set UGII_CAM_POST_CONFIGURATOR_UF6SbNmFujeENr4CuZZ=nx_post_configurator_full"
+	#####
+	puts $batch_file "set UGII_LANG=[lindex $lang $flag(language)]"
+	puts $batch_file "set UGII_DISPLAY_DEBUG=$flag(debug)"
+	puts $batch_file "set UGII_BASE_DIR=[format_path_names $base_parent_path\\$version\\]"
+	puts $batch_file "set UGII_ROOT_DIR=[format_path_names $base_parent_path\\$version\\UGII\\]"
+	if {[file isdirectory [format_path_names $base_parent_path\\$version\\NXBIN\\]]} {
+		puts $batch_file "set UGII_UGMANAGER_DIR=[format_path_names $base_parent_path\\$version\\NXBIN\\]"
+	}
+	puts $batch_file "set UGII_VERSION_BIT=$bit"
+	puts $batch_file ""
+
+	puts $batch_file "set JE_POST_POOL_DIR=[format_path_names [file join $base_pool_path] 1]"
+	puts $batch_file "set JE_POST_POOL_DIR_NG=[format_path_names [file join $base_pool_path_ng] 1]"
+	puts $batch_file "set JE_POOL_NGMK_CONTENT=[format_path_names [file join $base_content_path_ng] 1]"
+
+	puts $batch_file ""
+	if {[file isdirectory "$base_parent_path\\UGTools_$bit"]} {
+		puts $batch_file "set UGTOOLS_SYSDIR=[format_path_names $base_parent_path\\UGTools_$bit\\]"
+	}
+	if {[file isdirectory "$base_bitmap_path"]} {
+		puts $batch_file "set JS_BITMAP_PATH=$base_bitmap_path"
+	}
+		
+	puts $batch_file "echo CUSTOMER : \%CUSTOMER\%"
+	puts $batch_file "echo LANGUAGE : [lindex $lang $flag(language)]"
+
+
+	# to contents up to here is also valid for 'auto_test_file'
+	#    so copy the current state of the file
+	############################################################
+	flush $batch_file
+	file copy -force $universal_file $auto_test_file
+	############################################################
+
+	# AK - 07.08.2017: Set JE NX Version for teamcenter NX startup
+	set je_nx_version [string toupper $version]
+	puts $batch_file "set JE_NX_VERSION=$je_nx_version"
+
+	now_background $background
+	puts $batch_file "call $startbatch_file"
+        ####Modification arno
+        puts $batch_file "\n"
+	puts $batch_file "subst w: /d"
+	puts $batch_file "subst w: %JE_CUSTOMER_PATH%/custom/library/machine/installed_machines"
+	puts $batch_file "\n"
+	
+	if { $JETIO::runNow } {
+		set fileExecute [JETIO::CheckEnv "NXStart.bat"]
+		if { [file exist $fileExecute] } {
+			puts $batch_file "call $fileExecute"
+		}
+	} else {
+		puts $batch_file "\"\%UGII_ROOT_DIR\%\\ugraf\" \%1 \%2 \%3 \%4 \%5 \%6 \%7 \%8 \%9"
+	}
+
+	puts $batch_file [modify_custom cleanup]
+	puts $batch_file [modify_custom rename]
+	puts $batch_file "PING localhost -n 6 -w 50 >NUL"
+	puts $batch_file "exit"
+
+	close $batch_file
+
+	progress 30
+
+	AutoTestEnvironement
+
+	destroy .listbox
+
+	if {[file exists $change_file]} {
+		set dummy_file [open $change_file r]
+		set stop 0
+		while {[gets $dummy_file Zeile] >= 0} {
+			if {[regexp -nocase -- "$customerversion $customer_string" $Zeile]} {
+				set stop 1
+			}
+		}
+		close $dummy_file
+	}
+
+	if {![info exists stop] || $stop == 0} {
+		set dummy_file  [open $change_file a+]
+		puts $dummy_file "$customerversion $customer_string"
+		close $dummy_file
+	}
+
+	update
+
+	progress 10
+
+	if {$flag(versionline) < 2} {
+		exec $nxstartup_file &
+	} else {
+		switch $flag(versionline) {
+			2 {
+				set startup [format_path_names [file join "$base_parent_path/$version$mke_subdir"]]
+				if {[file exists $startup]} {
+					execute $startup
+				} else {
+					tk_messageBox -icon error -type ok -title  "MKE not available..." -message "No start up possible"
+				}
+				set flag(versionline,2) 0
+			}
+			3 {
+				set startup [format_path_names [file join "$base_parent_path/$version$postbuilder_subdir"]/]
+				if {[file exists $startup]} {
+					exec $startup "$base_parent_path/$version/" &
+				} else {
+					tk_messageBox -icon error -type ok -title  "PostBuilder not available..." -message "No start up possible"
+				}
+				set flag(versionline,3) 0
+			}
+			4 {
+				set startup [format_path_names [file join "$cmd_subdir"]]
+				if {[file exists $startup]} {
+					set batchdir $env(TEMP)
+					set batchdir [format_path_names [file join $batchdir "batchfile.bat"]]
+					set file_batch [open $batchdir w+]
+					puts $file_batch "cd [format_path_names [file join $base_parent_path/$version/]]"
+					puts $file_batch "$startup /k [format_path_names [file join $base_parent_path/$version/UGII/ugiicmd.bat]] [format_path_names [file join $base_parent_path/$version/]]\\ AUTO"
+					close $file_batch
+					eval exec [auto_execok cmd] [list << "explorer.exe /open,$batchdir\n"] &
+				}  else {
+					tk_messageBox -icon error -type ok -title  "CMD not available..." -message "No start up possible"
+				}
+				set flag(versionline,4) 0
+			}
+			5 {
+				set startup [format_path_names [file join "$configurator_subdir"]]
+				if {[file exists $startup]} {
+					execute $startup
+				} else {
+					tk_messageBox -icon error -type ok -title  "Configurator not available..." -message "No start up possible"
+				}
+				set flag(versionline,5) 0
+			}
+			6 {
+				set startup [format_path_names [file join "$lmtools_subdir"]]
+				if {[file exists $startup]} {
+					execute $startup
+				}  else {
+					tk_messageBox -icon error -type ok -title  "LMTools not available..." -message "No start up possible"
+				}
+				set flag(versionline,6) 0
+			}
+			7 {
+				set startup [format_path_names [file join "$services_subdir"]]
+				if {[file exists $startup]} {
+					execute $startup
+				} else {
+					tk_messageBox -icon error -type ok -title  "Services not available..." -message "No start up possible"
+				}
+				set flag(versionline,6) 0
+			}
+			8 {
+				if {[file exists $lmtools_subdir]} {
+					execute $lmtools_subdir
+				} else {
+					tk_messageBox -icon error -type ok -title  "Licensoptions not available..." -message "No start up possible '$lmtools_subdir'"
+				}
+				set flag(versionline,8) 0
+			}
+			default {
+				error_msg_exit "Meldung" "Programm kann nicht gestartet werden..."
+			}
+		}
+		#		.status.center.ok_button configure -fg grey70 -background grey90
+		#		.versionline.center.post configure -background grey90 -relief raised
+		#		.versionline.center.machine configure -background grey90 -relief raised
+		set flag(versionline) 0
+		update
+	}
+
+	.progress.info.c coords bar 0 0 0 40
+	set ::progress 0
+	set ::information "Task Completed"
+
+	if {!$call} {
+		exit
+	}
+
+	if {$flag(debug_startup) == 2} {
+		.information.info configure -text "Version $flag(versionline)" -fg grey70
+		tk_messageBox -icon error -type ok -title  "Loading..." -message "VERSIONNUMBER: $versionnumber\nCUSTOMER: $customer_string"
+	}
+
+}
+
+proc AutoTestEnvironement {} {
+
+	eval global [info globals]
+	global auto_test_file autotest_folder
+
+	if {$flag(autotest) == 0} {return}
+
+
+	set batch_file [open $startbatch_file r]
+	set content [split [read $batch_file] "\n"]
+	close $batch_file
+
+
+	set batch_file [open $auto_test_file a]
+	foreach line $content {
+		puts $batch_file $line
+	}
+
+	puts $batch_file "set aa=%cd%"
+	puts $batch_file "cd.."
+	puts $batch_file "set AUTO_TEST_BASE_FOLDER=%cd%"
+	puts $batch_file "cd %aa%"
+	puts $batch_file "  "
+
+
+	puts $batch_file "@%UGII_ROOT_DIR%\\run_managed \"%JE_POST_POOL_DIR_NG%\\utilities\\AutoTest\\executable\\AutoTest.exe\" \"%JE_POST_POOL_DIR_NG%\\utilities\\AutoTest\\executable\\script.txt\" \"settings.xml\""
+	puts $batch_file "exit"
+	close $batch_file
+
+
+	set autotest_folder [file join $customer_main_folder autotesting]
+	set autotest_result_folder [file join $autotest_folder test_results]
+
+	catch {file mkdir $autotest_result_folder}
+	catch {file rename $auto_test_file [file join $autotest_folder [file tail $auto_test_file]]}
+
+	set setting_file [file join $autotest_folder settings.xml]
+	set template_file [file join $autotest_folder autotest.template]
+
+	CreateAutotestFiles setting $setting_file
+	CreateAutotestFiles template $template_file
+
+}
+
+
+
+proc CreateAutotestFiles {type name} {
+
+
+	if {[file exist $name]} {
+		return
+	} else {
+
+		set f_id [open $name w+]
+	}
+
+
+
+	if {$type == "setting"} {
+		puts $f_id "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+		puts $f_id "<SettingData xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+		puts $f_id "  <TemplateFile>autotest.template</TemplateFile>"
+		puts $f_id "  <OutputBaseFolder>%AUTO_TEST_BASE_FOLDER%\\autotesting\\test_results</OutputBaseFolder>"
+		puts $f_id "  <Comparer>C:\\Program Files (x86)\\Beyond Compare 3\\BCompare.exe</Comparer>"
+		puts $f_id "</SettingData>"
+
+	} elseif {$type == "template"} {
+		puts $f_id "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+		puts $f_id "<Template xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+		puts $f_id "</Template>"
+	} else {
+
+	}
+
+
+	close $f_id
+
+}
+
+proc holding_stack {obj {loops 300} {wait 10}} {
+
+	if {[regexp -nocase -- {^[\\]{2}|^[A-Z][:][\\|\/]} $obj]} {set file 1} else {set file 0}
+	if {$loops < 0} {set loops [expr abs($loops)] ; set negate 1} else {set negate 0}
+	for { set n 1 } { $n <= $loops } { incr n } {
+		if {!$negate && !$file && [info exists $obj]} {
+			return
+		} elseif {!$negate && $file && [file exists $obj]} {
+			return
+		} elseif {$negate && !$file && ![info exists $obj]} {
+			return
+		} elseif {$negate && $file && ![file exists $obj]} {
+			return
+		}
+		after $wait
+	}
+
+}
+
+proc create_file {filename {fileoption "w+"} {filebody ""}} {
+
+	set fileid [open $filename $fileoption]
+	foreach e $filebody {
+		puts $fileid $e
+	}
+	close $fileid
+
+}
+
+proc execute_silent {batchname {windowstyle 0} {waitonreturn 1} {waittime 600}} {
+
+	global flag
+
+	if {$flag(debug_startup)} {debug}
+
+	set batchvbs "$batchname.vbs"
+	set batchresult "$batchname.[pid]"
+
+	if {![file exists $batchname]} {
+		tk_messageBox -icon error -type ok -title  "Error" -message "Can't execute '$batchname'.\nFile doesn't exists!"
+	}
+
+	create_file $batchvbs "w+" \
+	[list 	"WScript.CreateObject\( \"WScript.Shell\" \).Run \"\"\"$batchname\"\"\",0,1" \
+	"Set objFSO = CreateObject\(\"Scripting.FileSystemObject\"\)" \
+	"Set objFile = objFSO.CreateTextFile\(\"$batchresult\"\)"]
+
+	set cmd [list exec $::env(COMSPEC) /c start {} $batchvbs &]
+	set retval [catch $cmd output]
+
+	holding_stack $batchresult $waittime
+
+	if {[catch {file_delete $batchresult}]} {
+		tk_messageBox -icon error -type ok -title  "Error" -message "Error after executing '$batchname'.\nCreated Checkfile '$batchresult' can't deleted"
+	}
+
+	file_delete $batchvbs
+
+}
+
+set filename ""
+set scriptname ""
+
+proc execute {startup} {
+
+	global flag env filename scriptname
+
+	if {$flag(debug_startup)} {debug}
+
+	set name [file rootname [file tail $startup]]
+
+	set filename [format_path_names [file join $env(TEMP) "$name.bat"]]
+	set scriptname [format_path_names [file join $env(TEMP) "$name.vbs"]]
+
+	set fileid [open $filename w+]
+
+	puts $fileid "@echo off"
+	puts $fileid ""
+	puts $fileid "\"$startup\""
+	puts $fileid "IF EXIST \"$scriptname\" DEL /Q \"$scriptname\""
+	puts $fileid ""
+	puts $fileid "exit"
+
+	flush $fileid
+	close $fileid
+
+	while {![file exists $filename]} {after 250}
+
+	set scriptid [open $scriptname w+]
+
+	puts $scriptid "WScript.CreateObject\( \"WScript.Shell\" \).Run \"\"\"$filename\"\"\",0,0"
+	flush $scriptid
+	close $scriptid
+
+	while {![file exists $scriptname]} {after 250}
+
+	set error [exec cmd /c start $scriptname &]
+
+}
+
+proc create_batchfile {versionnumber} {
+        
+	eval global [uplevel #0 info vars]
+	global auto_test_file ultraedit dummy_file
+
+	set batch_file [open $startbatch_file w+]
+
+	puts $batch_file "set KUNDEN_PP_DIR=[format_path_names $customer_dir_path]"
+	puts $batch_file "set CUSTOMER_PP_DIR=\%KUNDEN_PP_DIR\%"
+	puts $batch_file "set JE_BASE_RELEASE_VERSION=v$versionnumber"
+	regexp {([0-9]+)} $ask_version all ask_version
+	puts $batch_file "set JE_RELEASE_VERSION=v$ask_version"
+	
+	#####Modifications Arno
+	puts $batch_file "set CustomerName=$customer_string"
+	puts $batch_file "set UGII_CAM_POST_CONFIGURATOR_INSPECT_TOOL_PREVIEW=1"
+	puts $batch_file "set UGII_CAM_POST_CONFIGURATOR_UF6SbNmFujeENr4CuZZ=nx_post_configurator_full"
+	#####
+	
+	puts $batch_file ""
+	puts $batch_file "set CUSTOMER_LIST_DIR=[format_path_names $nxstartup]"
+	puts $batch_file " "
+	puts $batch_file "echo CUSTOMER_LIST_DIR: \%CUSTOMER_LIST_DIR\%"
+	puts $batch_file " "
+	puts $batch_file "echo UGII_BASE_DIR  : \%UGII_BASE_DIR\%"
+	puts $batch_file "echo UGII_ROOT_DIR  : \%UGII_ROOT_DIR\%"
+	puts $batch_file "echo UGII_VERSION   : \%UGII_VERSION\%"
+	puts $batch_file " "
+	puts $batch_file "DATE /T > $logfile"
+	puts $batch_file "TIME /T >> $logfile"
+	puts $batch_file "echo CUSTOMER %CUSTOMER% >> $logfile "
+	
+	puts $batch_file "$modify_file >> $logfile"
+
+	puts $batch_file " "
+
+	puts $batch_file "set JE_CUSTOMER_PATH=\%CUSTOMER_PP_DIR\%\\%JE_BASE_RELEASE_VERSION\%\\\%CUSTOMER\%"
+	if {![file exists "${customer_dir_path}\\v${versionnumber}\\${customer_string}\\sent_to_customer"]} {
+		puts $batch_file "set JE_LICENSE_FILE_JEL=\%JE_CUSTOMER_PATH\%\\admin\\je_license.jel"
+		puts $batch_file "set JE_LICENSE_FILE_TXT=\%JE_CUSTOMER_PATH\%\\admin\\je_license.txt"
+	} else {
+		puts $batch_file "set JE_LICENSE_FILE_JEL=\%JE_CUSTOMER_PATH\%\\sent_to_customer\\admin\\je_license.jel"
+		puts $batch_file "set JE_LICENSE_FILE_TXT=\%JE_CUSTOMER_PATH\%\\sent_to_customer\\admin\\je_license.txt"
+	}
+
+	puts $batch_file " "
+	puts $batch_file "IF EXIST %JE_CUSTOMER_PATH%/nul GOTO DO"
+	puts $batch_file "set JE_SCRIPT=\%TEMP\%${home_parent_file}.vbs"
+	puts $batch_file "echo MsgBox \"Kunde nicht vorhanden %JE_CUSTOMER_PATH%\", 16, \"JANUS NX-Startup\" > %JE_SCRIPT%"
+	puts $batch_file "GOTO MESSAGE"
+	puts $batch_file " "
+	puts $batch_file ":DO"
+	puts $batch_file "IF $versionnumber LEQ 4 \("
+	set licenceservers ""
+	foreach e $licenceserver {
+		append licenceservers ";27000@$e"
+	}
+	set licenceservers [string trimleft $licenceservers ";"]
+	puts $batch_file "  set UGII_LICENSE_FILE=$licenceservers"
+	puts $batch_file "echo UGII_LICENSE_FILE %UGII_LICENSE_FILE% >> $logfile "
+	puts $batch_file "\) ELSE \("
+	set licenceservers ""
+	foreach e $licenceserver {
+		append licenceservers ";28000@$e"
+	}
+	set licenceservers [string trimleft $licenceservers ";"]
+#	puts $batch_file "  set UGS_LICENSE_SERVER=$licenceservers"
+#	puts $batch_file "  set SPLM_LICENSE_SERVER=$licenceservers"
+	puts $batch_file "echo SPLM_LICENSE_SERVER %SPLM_LICENSE_SERVER% >> $logfile "
+	puts $batch_file "\)"
+	puts $batch_file " "
+	puts $batch_file "set UGII_ENV_FILE=\%CUSTOMER_PP_DIR\%\\%JE_BASE_RELEASE_VERSION\%\\_default\\ugii_env.dat"
+	puts $batch_file " "
+	puts $batch_file "IF EXIST \%JE_LICENSE_FILE_JEL\% \("
+	puts $batch_file "  set JE_LICENSE_FILE=\%JE_LICENSE_FILE_JEL\%"
+	puts $batch_file "\) ELSE \("
+	puts $batch_file "  IF EXIST \%JE_LICENSE_FILE_TXT\% \("
+	puts $batch_file "	set JE_LICENSE_FILE=\%JE_LICENSE_FILE_TXT\%"
+	puts $batch_file "  \) ELSE \("
+	puts $batch_file "	set JE_LICENSE_FILE=\%JE_LICENSE_FILE_JEL\%"
+	puts $batch_file "  \)"
+	puts $batch_file "\)"
+	puts $batch_file " "
+	puts $batch_file "echo JE_LICENSE_FILE %JE_LICENSE_FILE% >> $logfile"
+	puts $batch_file "GOTO ENDE"
+	puts $batch_file " "
+	puts $batch_file ":MESSAGE"
+	puts $batch_file "IF EXIST \%JE_SCRIPT\% \("
+	puts $batch_file "  %JE_SCRIPT%"
+	puts $batch_file "\)"
+	puts $batch_file "IF EXIST \%JE_SCRIPT\% DEL /Q \%JE_SCRIPT\%"
+	puts $batch_file "GOTO ENDE"
+	puts $batch_file " "
+	puts $batch_file ":ENDE"
+	puts $batch_file "echo \"									   \""
+	puts $batch_file "echo \"   -->> JANUS UG ENVIRONMENT <<--\""
+	puts $batch_file "echo	 \%CUSTOMER_PP_DIR\%"
+	puts $batch_file "echo	 \%UGII_ENV_FILE\%"
+	puts $batch_file "echo \"									   \""
+	puts $batch_file "echo \"---------------------------------------\""
+	puts $batch_file "echo \"									   \""
+	puts $batch_file "echo	 \%UGII_LICENSE_FILE\%"
+
+	close $batch_file
+}
+
+proc compare_start {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {![file exists $beyond_compare]} {return}
+
+	set id [open [file join $env(TEMP)/${home_parent_file}.bat] w+]
+	puts $id "\"$beyond_compare\" \"[format_path_names [file join $customer_dir_path/$customerversion/$customer_string/]]\" \"[format_path_names [file join $server/$customerversion/$customer_string/]]\""
+	close $id
+
+	set error [exec [file join $env(TEMP)/${home_parent_file}.bat] &]
+	after 1000
+
+	if {[file exists [file join $env(TEMP)/${home_parent_file}.bat]]} {
+		file_delete [file join $env(TEMP)/${home_parent_file}.bat]
+	}
+
+	update
+
+}
+
+proc versionlist {{element "version_list"}} {
+
+	eval global [uplevel #0 info vars]
+
+	if {[string match "version_list" $element]} {
+		if {!$firstrun} {return}
+	}
+
+	set count 0
+	set $element ""
+	set width_list 15
+
+	foreach i $nx_base_dirs {
+		radiobutton .$element.$count -text "$i" -value $count -variable radioindicator -command change_button -width $width_list -anchor nw
+		pack .$element.$count -in .$element -side top -anchor w
+
+		lappend $element $i
+		incr count
+	}
+	update
+}
+
+set scrolledlistbox ""
+
+proc duplicatewindow { } {
+
+	eval global [uplevel #0 info vars]
+
+	package require BWidget
+
+	if {[string length [package versions BWidget]] == 0} {
+		tk_messageBox -icon error -type ok -title  "Error" -message "Package is not loaded, maybe the %PATH%, or TCL is not right defined or installed"
+		return
+	}
+
+	toplevel .duplicate
+	wm title .duplicate "Duplicate $customer_string"
+	wm geometry .duplicate 225x285+265+220
+
+	label .duplicate.lab -text "Please select the version for\nwhich you want to create a link:"
+	pack .duplicate.lab -fill both -padx 2m -pady 2m
+
+	set scrolled [ScrolledWindow .duplicate.ver]
+	pack $scrolled -expand true
+
+	set scrolledlistbox [listbox $scrolled.scrolledlistbox -selectmode single -listvariable nx_base_dirs -height 14 -takefocus 1 -borderwidth 1 -relief flat ]
+
+	$scrolled setwidget $scrolledlistbox
+
+	for {set i 0} {$i<[llength $nx_base_dirs]} {incr i 2} {
+		$scrolledlistbox itemconfigure $i -background #f0f0ff
+	}
+
+	set index [lsearch -exact [$scrolledlistbox get 0 end] $search]
+
+	$scrolledlistbox selection clear 0 end
+	$scrolledlistbox selection set $index
+	$scrolledlistbox see $index
+
+	button .duplicate.dup -text "Duplicate" -width 6 -fg #000000 -bg #E2E2E2 -command {duplicate [lindex $nx_base_dirs [$scrolledlistbox curselection]] ; destroy .duplicate}
+	button .duplicate.but -text "Close" -width 6 -fg #000000 -bg #E2E2E2 -command {destroy .duplicate}
+	pack .duplicate.dup .duplicate.but -side left -expand 1 -fill both -padx 2m -pady 2m
+
+	settooltip .duplicate.dup "Start to duplicate customer "
+	settooltip .duplicate.but "The dialog closed"
+
+}
+
+proc duplicate {target} {
+
+	eval global [uplevel #0 info vars]
+
+	if {[regexp "_DEV$" $customer_string]} {
+		tk_messageBox -icon error -type ok -title  "Error" -message "The customer is already linked, this is not possible again!"
+		return
+	}
+
+	regexp {([0-9]+)} $target all target
+
+	set ::server "\\\\JED.local\\JEx\\MachineKits\\Products\\NXStartup\\"
+	set duplicate_path [file join $home_parent_path "scripts" "symlink"]
+	if {![file isdirectory $duplicate_path]} {
+		set error [file mkdir $duplicate_path]
+	}
+	set duplicate_bat [file join $duplicate_path "Duplicate.bat"]
+	set duplicate_bat_server [file nativename [file join $server "scripts" "symlink" "Duplicate.bat"]]
+	if {![file exists $duplicate_bat] && [file exists $duplicate_bat_server]} {
+		file copy -force $duplicate_bat_server $duplicate_bat
+		check_file_progress $duplicate_bat
+		check_file_exists $duplicate_bat
+	} elseif {![file exists $duplicate_bat] && ![file exists $duplicate_bat_server]} {
+		tk_messageBox -icon error -type ok -title  "Error" -message "File not exists --> '$duplicate_bat'\n'$duplicate_bat_server'"
+		return
+	}
+	set duplicate_ps1 [file join $duplicate_path "Duplicate.ps1"]
+	set duplicate_ps1_server [file nativename [file join $server "scripts" "symlink" "Duplicate.ps1"]]
+	if {![file exists $duplicate_ps1] && [file exists $duplicate_ps1_server]} {
+		file copy -force $duplicate_ps1_server $duplicate_ps1
+		check_file_progress $duplicate_ps1
+		check_file_exists $duplicate_ps1
+	} elseif {![file exists $duplicate_ps1] && ![file exists $duplicate_ps1_server]} {
+		tk_messageBox -icon error -type ok -title  "Error" -message "File not exists --> '$duplicate_ps1'"
+		return
+	}
+
+	eval exec [auto_execok cmd] [list << "D:\\Siemens\\NXStartup\\scripts\\symlink\\Duplicate.bat $customer_dir_path $customerversion\\$customer_string v$target\\${customer_string}_DEV\n"] &
+
+	after 2000
+
+	change_button
+
+}
+
+proc erasing {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {[regexp "_DEV$" $customer_string]} {
+		set answer [tk_messageBox -type "yesno" -message "The development customer will now be cleaned! Really sure?" -icon question -title "Erasing '$customer_string'"]
+	} else {
+		set answer [tk_messageBox -type "yesno" -message "The customer will now be cleaned! Really sure?" -icon question -title "Erasing '$customer_string'"]
+		if {[string match "yes" $answer]} {set answer [tk_messageBox -type "yesno" -message "Really sure?" -icon question -title "Erasing '$customer_string'"]}
+	}
+	if {[string match "no" $answer]} {return}
+
+	set id [open [file join $env(TEMP)/${home_parent_file}.bat] w+]
+	set finish [file join $env(TEMP)/FINISH.finish]
+	puts $id "rd /s /q \"[format_path_names [file join $customer_dir_path/$customerversion/$customer_string/]]\""
+	puts $id "echo FINISH > $finish"
+	puts $id "timeout /T 10"
+	close $id
+
+	file_delete $finish
+	set error [exec [file join $env(TEMP)/${home_parent_file}.bat] &]
+	after 100
+
+	.information.info configure -text "!!! Cleaning in progress - PLEASE WAIT !!!" -fg red
+	update
+
+	while {![file exists $finish]} {after 100}
+	file_delete $finish
+
+	if {[file exists [file join $env(TEMP)/${home_parent_file}.bat]]} {
+		file_delete [file join $env(TEMP)/${home_parent_file}.bat]
+	}
+
+	change_button
+	.information.info configure -text "-- No customer select --" -fg blue
+	update
+
+}
+
+proc now_leaveopen {} {
+
+}
+
+proc now_compare {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(compare) == 0 || ![file isdirectory $xml_all_path]} {
+		return
+	}
+
+	set change [file join $xml_all_path "Customer_XML.xml"]
+	set change [open $change w+]
+
+	regsub -all "_" $customer_string " " customer_line
+
+	set xml_file [open [file join $xml_path $customer_line.xml] w+]
+
+	set Projekt [file join $customer_dir_path $customerversion $customer_string]
+	set Datastore "${server}$customerversion\\$customer_string"
+
+	puts $change "<bc_settings>"
+	puts $change "  <sessions>"
+
+	if {[file exists $change_file]} {
+		set dummy_file [open $change_file r]
+	} else {
+		return
+	}
+
+	while {[gets $dummy_file Zeile] >= 0} {
+		set number ""; set customer ""
+		if {[regexp -nocase -- {([^ ]+).([^#]+)} $Zeile all number customer]} {
+			if {[regexp -nocase -- "$customerversion $customer_string" $Zeile] || ![regexp -nocase -- {[0-9]+} $number]} {continue}
+			set change_projekt [file join $customer_dir_path $number $customer]
+			set change_datastore "${server}$number\\$customer"
+			set error [write_xml $change $customer $change_projekt $change_datastore]
+		}
+	}
+
+	close $dummy_file
+
+	set error [write_xml $change $customer_line $Projekt $Datastore]
+
+	puts $change "  <\/sessions>"
+	puts $change "<\/bc_settings>"
+
+	close $change
+
+	puts $xml_file "<bc_settings>"
+	puts $xml_file "  <sessions>"
+	set error [write_xml $xml_file $customer_line $Projekt $Datastore]
+	puts $xml_file "  <\/sessions>"
+	puts $xml_file "<\/bc_settings>"
+
+	close $xml_file
+
+	if {[info exist xml_radioindicator] && $xml_radioindicator > 1} {
+
+		set xml_skript [open $compare_file w+]
+
+		puts $xml_skript "load MySession"
+		puts $xml_skript "load $Projekt $Datastore"
+		puts $xml_skript "load \<default\>"
+
+		close $xml_skript
+		if {![file exists $beyond_compare]} {
+			tk_messageBox -icon error -type ok -title  "BEYOND COMPARE '$beyond_compare' not available..." -message "No start up possible"
+		} else {
+			set error [exec $beyond_compare]
+			cancel
+		}
+	}
+}
+
+proc write_xml {xml_file customer_line Projekt Datastore} {
+
+	puts $xml_file "	<list name=\"$customer_line\">"
+	puts $xml_file "		<str_val name=\"1\" value=\"$Projekt\"\/>"
+	puts $xml_file "		<str_val name=\"2\" value=\"$Datastore\"\/>"
+	puts $xml_file "		<int_val name=\"RO\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"Expand\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"ExpandDiffs\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"Auto\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"Readonly\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"UseCutoff\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"CutoffNew\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"UseDaysAgo\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"DaysAgo\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"CutoffLo\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"CutoffHi\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"Tolerance\" value=\"2\"\/>"
+	puts $xml_file "		<int_val name=\"LeftAdjustLo\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"LeftAdjustHi\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"RightAdjustLo\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"RightAdjustHi\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"IncludeAttrib\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"ExcludeAttrib\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"SizeFilterMode\" value=\"0\"\/>"
+	puts $xml_file "		<int_val name=\"Criteria\" value=\"11\"\/>"
+	puts $xml_file "		<int_val name=\"Display\" value=\"127\"\/>"
+	puts $xml_file "		<int_val name=\"SortBy\" value=\"65799\"\/>"
+	puts $xml_file "		<str_val name=\"Cols\" value=\"n303s50t128\"\/>"
+	puts $xml_file "	<\/list>"
+
+}
+
+proc language_default {} {
+
+	eval global [uplevel #0 info vars]
+
+	set flag(language) 0
+	set checkbutton_german 0
+	set checkbutton_english 0
+	set checkbutton_french 0
+	set checkbutton_italian 0
+	set checkbutton_simpl_chinese 0
+	set checkbutton_trad_chinese 0
+	set checkbutton_japanese 0
+	set checkbutton_korean 0
+	set checkbutton_braz_portuguese 0
+	set checkbutton_russian 0
+	set checkbutton_spanish 0
+
+}
+
+proc language {language} {
+
+	eval global [uplevel #0 info vars]
+
+	language_default
+
+	switch $language {
+		"german" 		{set flag(language)  0 ; set checkbutton_german 1}
+		"english" 		{set flag(language)  1 ; set checkbutton_english 1}
+		"french" 		{set flag(language)  2 ; set checkbutton_french 1}
+		"italian" 		{set flag(language)  3 ; set checkbutton_italian 1}
+		"simpl_chinese" 	{set flag(language)  4 ; set checkbutton_simpl_chinese 1}
+		"trad_chinese" 		{set flag(language)  5 ; set checkbutton_trad_chinese 1}
+		"japanese" 		{set flag(language)  6 ; set checkbutton_japanese 1}
+		"korean" 		{set flag(language)  7 ; set checkbutton_korean 1}
+		"braz_portuguese" 	{set flag(language)  8 ; set checkbutton_braz_portuguese 1}
+		"russian" 		{set flag(language)  9 ; set checkbutton_russian 1}
+		"spanish" 		{set flag(language) 10 ; set checkbutton_spanish 1}
+		default 		{set flag(language)  1 ; set checkbutton_english 1}
+	}
+
+	update
+}
+
+proc reset_versionline_view {{keep -1}} {
+
+	eval global [uplevel #0 info vars]
+
+	for { set n 0 } { $n <= 8 } { incr n } {
+		if {$keep != $n} {
+			set flag(versionline,$n) 0
+		} else {
+			set flag(versionline,$n) 0
+			set flag(versionline) $keep
+		}
+	}
+
+}
+
+proc versionline {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(versionline) == 0} {
+		.versionline.center.post configure -background grey80 -relief sunken
+		.versionline.center.machine configure -background grey90 -relief raised
+	} elseif {$flag(versionline) == 1} {
+		.versionline.center.machine configure -background grey80 -relief sunken
+		.versionline.center.post configure -background grey90 -relief raised
+	}
+
+	update
+
+}
+
+proc versionline_exchange {Variable1 Variable2 ResultVariable1 ResultVariable2} {
+
+	upvar 1 $ResultVariable1 ResultVariable_1
+	upvar 1 $ResultVariable2 ResultVariable_2
+
+	set ResultVariable_2 $Variable1
+	set ResultVariable_1 $Variable2
+
+}
+
+proc now_background {status} {
+
+	eval global [uplevel #0 info vars]
+
+	puts $batch_file "set JE_BACKGROUND_URL=[format_path_names [file join $nxstartup "background" "STGBackground.html"]]"
+	if {$flag(background) != 0 && $status} {
+		puts $batch_file "set UGII_BACKGROUND_URL=[file join $nxstartup "background" "Background.html"]"
+	}
+
+}
+
+set customerdirectory ""
+set ask_base_version ""
+set ask_version ""
+
+proc find_version {{overwrite 0}} {
+
+	eval global [uplevel #0 info vars]
+
+	if {$flag(debug_startup)} {debug}
+
+	set search [lindex $nx_base_dirs $radioindicator]
+
+	if {$overwrite != 0} {set folder $overwrite}
+
+	set path "[lindex $nx_base_dirs [format %.0f $radioindicator]]_64Bit"
+
+	if {![file isdirectory [file join $base_parent_path $path]]} {
+		set path "[lindex $nx_base_dirs [format %.0f $radioindicator]]"
+	}
+
+	if {[regexp -nocase -- {^([UGSNX]+([0-9]+)\.([0-9]))*$} $path all search number subversion]} {
+		set version "NX$number.$subversion"
+		set nxversion "NX$number.$subversion"
+		set customerversion "v$number"
+		set bit ""
+	} elseif {[regexp -nocase -- {^(UGS|NX)([0-9]+)\.?([0-9]?)(\.[0-9])?(\.[0-9])?(\.MP[0-9]+)?\_?((32|64)?(Bit|BIT)?)$} $path all search number subversion qrmversion qrmminor mpversion bit]} {
+		set version "NX$number.${subversion}_$bit"
+		if {$subversion == "" && $bit != ""} {
+			set version "NX${number}_$bit"
+		} elseif {$subversion == "" && $bit == ""} {
+			set version "NX$number"
+		}
+		if {$qrmversion != "" && $bit != ""} {
+			set version "NX$number.${subversion}${qrmversion}_$bit"
+			if {$mpversion != ""} {
+				set version "NX$number.${subversion}${qrmversion}${mpversion}_$bit"
+			}
+
+			if {$qrmminor != ""} {
+				set version "NX$number.${subversion}${qrmversion}${qrmversion}_$bit"
+				if {$mpversion != ""} {
+					set version "NX$number.${subversion}${qrmversion}${qrmminor}${mpversion}_$bit"
+				}
+			}
+		} elseif {$qrmversion != "" && $bit == ""} {
+			set version "NX$number.${subversion}${qrmversion}"
+			if {$mpversion != ""} {
+				set version "NX$number.${subversion}${qrmversion}${mpversion}"
+			}
+
+			if {$qrmminor != ""} {
+				set version "NX$number.${subversion}${qrmversion}${qrmversion}"
+				if {$mpversion != ""} {
+					set version "NX$number.${subversion}${qrmversion}${qrmminor}${mpversion}"
+				}
+			}
+		}
+		set nxversion "NX$number.$subversion"
+	} else {
+		set number [ask_base_version $path]
+		set nxversion [ask_version $path]
+		set version $path
+		set subversion ""
+	}
+	if {$subversion != 0 && $subversion != ""} {
+		set customerversion "v$number.$subversion"
+	} else {
+		set customerversion "v$number"
+	}
+
+	set directorycheck [file join $base_parent_path $version]
+
+	set ask_version [ask_version $version]
+	set ask_base_version [ask_base_version $version]
+
+	set customerdirectory [format_path_names [file join $customer_dir_path $customerversion $customer_string]]
+
+	.information.info configure -text "$customer_string"; update
+	if {[string length $ask_base_version] == 0 || [regsub -all $ask_base_version $ask_version "" dummy]} {
+		.bitversionline.title configure -text "Version $ask_version"; update
+	} else {
+		.bitversionline.title configure -text "Version $ask_version / Base Version $ask_base_version"; update
+		set customerversion "v$ask_base_version"
+	}
+
+}
+
+proc change_button {} {
+	#_______________________________________________________________________________
+	#  If the UG-Version is selected, the customers under this version are listed
+	#_______________________________________________________________________________
+
+	eval global [uplevel #0 info vars]
+
+	set ::information ""
+
+	find_version
+
+	if {![file isdirectory "$customer_dir_path\\$customerversion"]} {set customerversion ""}
+
+	cd "$customer_dir_path\\$customerversion"
+
+	.customers.custom_list delete 0 end
+
+	foreach i [lsort -increasing -dictionary [glob -nocomplain -directory "$customer_dir_path\\$customerversion" -type d *]] {
+		set i [file tail $i]
+		.customers.custom_list insert end "$i"
+	}
+
+	set default_user_list [.customers.custom_list get 0 [.customers.custom_list size]]
+	set default_user [lsearch -exact $default_user_list $default_user]
+	if {$default_user == -1} {set default_user [lsearch -exact $default_user_list $customer_string]}
+	.customers.custom_list selection set $default_user
+	bind .customers.custom_list <3> {context_ueproject; tk_popup .popupMenu %X %Y}
+
+	check_version
+
+	if {$default_user < 0} {
+		set flag(ok) 0
+	} else {
+		set flag(ok) 1
+	}
+
+	check_ok
+
+	set firstrun 0
+
+}
+
+proc check_ok {} {
+
+	eval global [uplevel #0 info vars]
+
+	set ::information ""
+
+	if {$flag(ok) == 0} {
+		.status.center.ok_button configure -image [image create photo -data $::Icon113]
+		.information.info configure -fg grey70
+	} else {
+		.status.center.ok_button configure -image [image create photo -data $::Icon100]
+		.information.info configure -fg black
+	}
+
+	create_menu_extended
+	check_senttocustomer
+	now_explorer 0 3
+	now_packit 0
+
+	update idletasks
+
+}
+
+proc check_file {} {
+
+	eval global [uplevel #0 info vars]
+
+	foreach e {customer_file modify_file default_file universal_file startbatch_file compare_file} {
+		set filename [subst $$e]
+		if {![file exist $filename]} {
+			set dummy_file  [open $filename w+]
+			close $dummy_file
+		}
+	}
+
+	update
+}
+
+proc error_msg_exit {head_msg body_msg} {
+
+	tk_messageBox -icon error -type ok -title  "$head_msg" -message "$body_msg"
+
+}
+
+proc eliminate_zero {value {decimal_places ""}} {
+
+	if {$decimal_places != ""} {
+		set form "%." ; append form $decimal_places ; append form f
+		set w0 [format "$form" $value]
+	} else {
+		set w0 $value
+	}
+	set w [string trimleft $w0 "0"]
+	if {[regexp "\\." $w0]} {set w [string trimright $w "0"]}
+	set w2 [string trimright $w "."]
+	if {$w2 == "."} {set w2 0}
+	if {$w2 == ""} {set w2 0}
+	if {[string range $w2 0 0] == "."} {set w2 "0$w2"}
+	if {$w2 == "-0"} {set w2 0}
+	return $w2
+}
+
+proc help { } {
+
+	global image flag
+
+	toplevel .about
+	wm title .about "About"
+	wm geometry .about 325x285+250+250
+
+	label .about.lab -text "More help under http://www.janus-engineering.com\n\n Version $::flag(mainversion).[format %02d [expr [string trimleft [lindex [lindex [lindex $::config_data end] 1] 1] 0]-$flag(cleanupversion)]]\n Copyright 2013-2018 JANUS Engineering AG"
+	button .about.picture -relief raised -image [image create photo -data $image] -command iexplorer
+	button .about.but -text "Close" -width 26 -fg #000000 -bg #E2E2E2 -command { destroy .about }
+	pack .about.lab .about.picture .about.but -padx 5 -pady 5
+
+	settooltip .about.picture "The website http://www.janus-engineering.com will open"
+	settooltip .about.but "The dialog closed"
+
+}
+
+proc iexplorer { } {
+
+	global tcl_platform
+
+	if {[ catch {
+		if {$tcl_platform(platform) == "windows"} {
+			eval {exec explorer.exe "http:\\\\www.janus-engineering.com"} &
+		}
+	} Err ]} {
+		tk_messageBox -title "Can not open generated File" -message "Sorry, no documentation: $Err" -icon error -type ok -parent .
+	}
+
+}
+
+proc wish {} {
+
+	global env
+
+	set list [split $env(PATH) ";"]
+	set list [linsert $list 0 "$env(PATH)"]
+	set list [linsert $list 0 "$env(windir)\\programme\\"]
+	set list [linsert $list 0 "$env(ProgramFiles\(x86\))"]
+	set list [linsert $list 0 "$env(ProgramW6432)"]
+	set list [linsert $list 0 "$env(ProgramFiles)"]
+
+	set wish ""
+	foreach x $list {
+		foreach e {wish86 wish85 wish84 wish} {
+			if {[file exist "$x\\tclpro1.4\\win32-ix86\\bin\\$e.exe"]} {
+				set wish "$x\\tclpro1.4\\win32-ix86\\bin\\$e.exe"
+				break
+			} elseif {[file exist "$x\\tcl\\bin\\$e.exe"]} {
+				set wish "$x\\tcl\\bin\\$e.exe"
+				break
+			}
+
+		}
+		if {$wish != ""} {break}
+	}
+
+	if {$wish == ""} {
+		tk_messageBox -icon error -type ok -title  "Wish..." -message "No wish application found, please check it"
+		exit
+	}
+
+	return [format_path_names $wish 0 1]
+
+}
+
+proc settooltip {widget text} {
+
+	if { $text != "" } {
+		bind $widget <Any-Enter>    [list after 500 [list showtooltip %W $text]]
+		bind $widget <Any-Leave>    [list after 500 [list destroy %W.tooltip]]
+		bind $widget <Any-KeyPress> [list after 500 [list destroy %W.tooltip]]
+		bind $widget <Any-Button>   [list after 500 [list destroy %W.tooltip]]
+	}
+}
+
+proc showtooltip {widget text} {
+
+	global tcl_platform
+
+	if { [string match $widget* [winfo containing  [winfo pointerx .] [winfo pointery .]] ] == 0  } {
+		return
+	}
+
+	catch { destroy $widget.tooltip }
+
+	set scrh [winfo screenheight $widget]
+	set scrw [winfo screenwidth $widget]
+	set tooltip [toplevel $widget.tooltip -bd 1 -bg black]
+	wm geometry $tooltip +$scrh+$scrw
+	wm overrideredirect $tooltip 1
+
+	pack [label $tooltip.label -bg white -fg black -text $text -justify left]
+
+	set width [winfo reqwidth $tooltip.label]
+	set height [winfo reqheight $tooltip.label]
+
+	set pointer_below_midline [expr [winfo pointery .] > [expr [winfo screenheight .] / 2.0]]
+	set positionX [expr [winfo pointerx .] - round($width / 2.0)]
+	set positionY [expr [winfo pointery .] + 35 * ($pointer_below_midline * -2 + 1) - round($height / 2.0)]
+
+	if  {[expr $positionX + $width] > [winfo screenwidth .]} {
+		set positionX [expr [winfo screenwidth .] - $width]
+	} elseif {$positionX < 0} {
+		set positionX 0
+	}
+
+	wm geometry $tooltip [join  "$width x $height + $positionX + $positionY" {}]
+	raise $tooltip
+
+	bind $widget.tooltip <Any-Enter> {destroy %W}
+	bind $widget.tooltip <Any-Leave> {destroy %W}
+}
+
+set janus {
+	R0lGODlhyAA7AHcAACH5BAAAAAAALAAAAADIADsAh2tra2tza3Nzc3N7c3t7e3uEe4SEhISMhIyM
+	jIyUjJSUlJSclJycnJylnKWlpaWtpa0ACK0AEK0IEK2tra21rbUAELUAGLUAIbUAKbUAMbUIGLUI
+	IbUIKbUIMbUQIbUQKbW1tbW9tb0AKb0AMb0IKb0IMb0IOb0QKb0QMb0QOb0QQr0YKb0YOb0YQr0Y
+	Sr0hQr0hSr0pOb0pSr29vb3GvcYYSsYhSsYpSsYpUsYxSsYxUsYxWsY5WsY5Y8ZCWsZCY8ZKY8bG
+	xsbOxs45Y85CY85Ca85KY85Ka85Kc85Sa85Sc85ac85ae85je85jhM5re85rhM7Ozs7WztZje9Zj
+	hNZrhNZrjNZzjNZzlNZ7jNZ7lNaElNaEnNaMnNbW1tbe1t6EnN6MnN6Mpd6Upd6Urd6cpd6crd6l
+	rd6ltd6ttd6tvd7e3t7n3uetvee1vee1xue9xue9zufGxufGzufG1ufOzufO1ufn5+fv5+/Gzu/O
+	1u/O3u/W1u/W3u/e3u/e5+/n5+/n7+/v7+/37+/39/fe5/fv7/fv9/f37/f39/f/9/f////n7//v
+	9//39//3/////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAj+ABMJEkhwoMGCCAUtSpQGio4WNpKQAbTwoMWEGC9qzMhxo8eOID+KDElypMmEglKqXMmS5SI3
+	Mi5cEDEiAwYLJbgoEtiyp8+fQIMKHUq0qNGjSH3yNJpoUZcLGGpmyCB1RAQlhJYm3cq1q9evYFvy
+	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
+}
+
+set Icon100 {
+R0lGODlhMAAwAOYAAP////7+/v39/fz9/fz8/Pv7+/r6+/n6+vj5+fj4+Pf3+Pb39/X29vT19vT0
+9fLz8/Hy8/Dx8vDx8e/w8e3u7+vs7ejq6+jp6ubo6eXn6OTm5+Pl5uLk5d/h4t3f4Nze4Nnb3dXX
+2dHU1tDT1c/S1M7R1MzP0cnMz8TIysDEx73BxLzAw7m9wLe8v7a7vrK3u7K3urC1ua+0uKqwtKiu
+sqWrr6SqrqOpraKorJ+lqp2jqJqgpZmgpJifo5edopOan5GYnY+XnI2UmYuSl4qRl4mRloeOlIaO
+k4SMkoOLkX+IjX+HjX6GjHmCiHeAhnV+hHR9g3N8gnJ7gXB6gG53fm13fWx2fGx1fGt0e2p0emhy
+eWhxeGdxd2RudWBqcV9pcF1ob1xmbllka1hja1VgaFRfZlJdZU5aYU1YYEtXX0pWXklVXUhUXEZS
+WkVRWUNPWEJOV0FOVkFNVUBMVT5LUwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5
+BAkAAHUALAAAAAAwADAAAAj+AOsIHEiw4EABHlTkAHLkCJAcKjwIMEixosWBDWBEkaMGS5EdNWrs
+KIJFjZwoMBpcXEmRQxI6WGJouKghBhY6STiwZCkhyZwgFnYOtBBkThIJQimycINkQtKCE5C4YfFU
+4AEkaERUpSgCDZIDSR1sqQJha0UIVbY42OkAzBICZi0SWAJm7UUDWpQAiHsRgBItBi4iqQKX70UC
+VZBYbIGmrOGVENC0oCjBDYnHO0e4QVowSRLMQj0X3DDHKWiWE+ZsIIgkyGmCMXxUDKJYIAM6QV/X
+KfHmQ0ULdBgIfJFFd50MbVJczPJCIBQZuheI0bFSBpQ6AuLMPB3gSZO9NOP+CPiQRjePMAl2pvmg
+wsrrFWwuCLWyIgeR0yDgaBU6ZCEP0BSgAcNTOwBhxA2YFdCFEFXZYMSBmCVxxQANGgHEfxaZgMFK
+NJjxwFYF2nfRDGfkRtEJb3RgFhEQXbFSD2VQ0JIbKMR1xQrksRTEGBEU5AAZOPC1XnbbWQSAEV+o
+JFAAUzDBlwbi1fEcSwEs0YUCAv3gBVhxWTdccSwN4MQVB7iwRgWGMWcbbjsVQAUXcIRgGHDCCdSa
+UAhIMZlhtBFEmmnGUZTaagSJFihFhhJU2WWHEqQZZwUx5lijke1J0WCFBYpYbRXhpVegfgG2Ultv
+6TZXXWyNNeljaKmV1FU6WWHW1VdbLdVUXFFNxVdPP5m4E1FGQcqXSzDJRJNNOOn0WkYbdfRRSCOV
+dFJKjWKX0EINPRTRRFUFBAA7
+}
+
+set Icon101 {
+R0lGODlhMAAwAOYAAP////39/fz8/Pr6+/n6+vX29vT19vT09fHy8/Dx8e/w8ejq6+Tm5+Pl5uLk
+5d3f4Nze4NHU1tDT1c/S1MvO0crO0MnMz73BxLzAw7m9wLe8v7K3u7K3urC1ua+0uKWrr6SqrqOp
+rZ+lqpqgpZmgpJGYnY+XnIuSl4qRl4mRloeOlIaOk4SMkoOLkX+IjX+HjXR9g3N8gm13fWx2fGx1
+fGt0e2p0emhyeWhxeF1ob01YYEtXX0pWXkVRWUNPWEFOVkFNVUBMVT9MVD9LVD5LUwAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5
+BAkAAEUALAAAAAAwADAAAAj+AIsIHEiw4MAADy6IKLFiRQkRFx4EMEixosWBBjjEAMKjRooRHz6M
+SFGDB5AYHAxcXEnRQQsiNTowuMigQw0iLRywZJmgRRATC3YOXGAiSIsEQilm6MFCQdKCClj0yPBU
+IAEWOiJUpRhBBwsCSQ/gkIFga0UEMnAc2HkgxwsBZi0KeJFj7cUBN1wAiHsRgIsbAy6ykAGX70UB
+MlhY1KCjrOGVCHRooJigx4THOyX0QFqwRQvMQj0XbBDEKWiWCoI0IMjCxGmhJhQLLEAk6MUMFIRS
+oHpxAZECAjfYYFnBhwWWFnxUYGljg0AYHnYmP25x+k4PMIoE+DFTuvGK1nf+MvgRAMKOp+EJpt+5
+A8KFGVXXr985A4MIFFvDz995YiEJs9Ptt9MIJagQQlwWCDEEdVuBoIKBCA4hBINVOVjCf/kZJyBL
+BN6XIXUbXoQCRDTE991AIVZEAwbmoXeiei+yB8F23SEXI4wU0kReEdB5l2NBKQ6EXXDDrVTcjwYl
+t9xKzc1W20q46cabRb4BJ1Brr+0UG0GkmZZlRamtRpBoX1ZEJkGVXVZmQZpxVhBjjq1ZRGSTVTRY
+YWUiJltFeOlVpl+ArdTWW1nOVRdbY8X5GFpqJXVVVph19dVWSzUVV1RT8dXTT7YJRZRRbvLlEkwy
+0WQTTjq9ltFGHX0U0kgRJZ2UkpzaJbRQQw9FNFFVAQEAOw==
+}
+
+set Icon103 {
+R0lGODlhMAAwAPcAAP////7+/v39/fz9/fz8/Pv7+/r6+/n6+vj5+fj4+Pf4+ff3+PX29vT19vT0
+9fP09PLz8/Hy8/Dx8vDx8e/w8e7v8Ozt7uvs7ers7Orr7Onr7Ojq6+jp6ufo6ubo6eTm5+Pl5uLk
+5eHj5eDi5N/h4t3f4Nze4Nvd39rc3tnc3dbZ29TX2dPW2NHU1tDU1tDT1c/S1M3R083Q0svO0cnN
+z8jLzsbKzMHFyMDEx73BxLzAw7q/wrq+wbm9wLi9wLe8v7a7vrW6vbO4u7K3u7K3urC1ua+0uK2y
+tqyxtaqvs6musqWrr6SqrqOpraKorKCmqp+lqp6lqZ2jqJuhppqgpZmgpJmfpJedopadoZOan5Oa
+npGYnY+XnI+Wm46VmouSl4qRl4mRloeOlIaOk4SMkoOLkYOLkIGJj3+IjX+HjX2Gi3yFi3uEinuD
+iXqCiHiAhnZ/hXV+hHR9g3N8gnF6gXB5f213fWx2fGx1fGt0e2p0emlzemhyeWhxeGZwd2RudWNt
+dGFrcmBqcV1ob1tlbVplbFlka1hja1hialdialdiaVVgaFRfZlNeZlJdZVFdZFFcZFBbY01ZYU1Y
+YEtXX0pWXkZSWkVRWkVRWURQWENPWEJOV0FOVkFNVUBMVT9LVD5LUz5KUz1KUzxJUTxIUTpHUDhF
+TjdETTZDTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAAKkALAAAAAAwADAA
+AAj+AFMJHEiw4EABJXJA2TJmzBYoOUoIMEixosWBDYjM6VQpTxgqS5ZQCZOnUqc5RBpcXEkxRBlQ
+eYp8uPihSB5QZUKwZDmhjCcuG3YO3MDFU5kJQin2wESGQtKCFMhg6vFU4AEyk1pUpdhiEpkDSR30
+sRNha8UIdvo42OlgUBoCZi0SSDNo7UUDfNAAiHsRABo+Bi6SsQOX70UCdshY/DGprOGVESb9oDgB
+E4zHO19gQlqwTBm+BJSYEOq5IAhPTleyMKOJCMECchBpCiQkwUoKnkAQJMPlooMkhihRqUEJy94D
+dewgOADED6cvoy1yUSyQAaigFFmc+UTnxgCBGgr+uVFwJ0/ggSS4YKJt2+AGUAwEDtFDEckhSlU4
+EEwgZJAlFGyIAocNARB0gA+CcHIBRXoMIZAcRhg0gCKEtCfQCV9ssgcPBQhUgRONRBKFBQNZsIgX
+exlkhBypCMDJTAY9oEcfECxARCCYbKGTQQDM0IYob9TQgSNZWPQBJwKYQIlcZUjCSR8c8tREI6ZQ
+sRIlJuRwx0UFgOFCVQ9YEQeMFd2hAxRgWIScI6LIQSBL2nHXhSVaVfTFQlVUlEAedRwwwZSSSEGi
+Qb/dl59AO2yyQ0VUbCFGExQd0MccHQoEgAxrgOJmgamsYIYn3X03UAp8nJIBRUyI8ShFEejBSRj/
+KRQ0wRKOhILBBKXsgZ1ANuK4hQgVpbpFnhWFoIUlgRCxwEAZMEKKB6nEgMkSApnwBSeJ8HAeow+l
+eZEVa+zx3AkdQHJFJtCmMgIkbAByya+o2GURGBDhsdKwqYiwxSWiSJEKugNRMEaUqcS7Eh46KHkv
+sakUoIJAAFdk8EVYukgmRfgaFDFFE1d05EQQXpRxQRsb1DFFK8pHn0VTPHJEfASVLBAEQchRCgIX
+NVjddRYNkEMenoRRwkAba5BEHqTkkYQGF70Hcyq8sRTCFpn8AYQB6I7wRCBtCiHBTtMRdFpqKyEg
+RCCWjCLJJmjgYCFLuOlGUGlJpaAGDYU9RTdBbJVdhtlKmnFWEGOO/c2qZBYNlrfhAyFGXUV46cX4
+QH4BtlJbb00+V11sjVX4Y2ipldRVWWHW1VdbLdVUXFFNxVdPP+26E1FGCc6XSzDJRJNNOO1oeEYb
+dfRRSCOVdFJKkxeEkEIMOQSRRFsFBAA7
+}
+
+set Icon113 {
+R0lGODlhMAAwANUAAP////7+/v39/fz8/Pv7+/r6+vn5+fj4+Pf39/b29vX19fT09PPz8/Ly8vHx
+8fDw8O7u7u3t7ezs7Ovr6+rq6unp6ejo6Ofn5+bm5uXl5eTk5OPj4+Li4uHh4eDg4N/f397e3t3d
+3dzc3Nvb29ra2tnZ2djY2NfX19bW1tXV1dTU1NPT09LS0tHR0dDQ0M/Pz87Ozs3NzczMzAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAADMALAAAAAAwADAAAAj+AGcI
+HEiw4EAACSBg4PDhAwcMEBIAMEixosWBAiaQkPHChAcNFy5o8GDihQwSEwRcXEnxAAgZJigcuHiA
+ggkZIGayXEngJQcDOwca4ICTQFCKEWB8MHqUIIEPMCI0FRjggwsGUykycPEhwNEBJ0wMyFpxgIkT
+Y1kOUBHCK9mKAUKoSGsxwIkQE99aBBDihNuKH0z81QvXxAeLElzQJWxxgAsJFAnAwMqYJQMYTAmC
+AFE56OaCB2Rk7nyRgAydAh2SJkhhQ0WGGGUAXT2jQYwEFQ3IUDljggnaMw7AgHDRxASBJCjQFrAi
+w0oKJGYAiIG6MoARIvJaPBAD4QvaGlT+8F75IuFv0klnszQRAYMH0gpiUN7pYaGGzgRcHD+qgeGF
+ygGg0MFUFzT0H2MgmKBdUAVycJ9FDahXkQUtLBZUf+5dVIELEhbkQAwIkFUfBOdZpAELow0k3ANv
+sZfAdytxsEKKA7CAgV7lTVcdRQB8kMJ4AJQQgl7cTZQcS3yhwNsGKQw2FXQC+bbTdYJJ8EIBhBkn
+kACy7RRACSfEsABhuo2nmpckQEYYbCqKBpxFpu342ZsUzenUZHQWdFmKAiVmIXCOqUlRYE6uFoBh
+F9mF15t8+bXSWm3RFtdcO4ElFmlmoXVUVVdVtlVXWSW11FtPRaVXTzL81NRQRVXmEkwgMtFkE047
+MpbRRh19FNJIJZ2UUp7SJbRQQw9FtGBQAQEAOw==
+}
+
+set Icon114 {
+R0lGODlhMAAwAOYAAP/////+/v/9/f78/P77/P76+/76+v35+f34+f33+P329/z19vz09vz09fvz
+9Pvx8vvw8vrv8fru8Pru7/ns7vjp7Pjn6ffm6Pfk5/fj5vbj5fbh5PXg4/Td4PTa3vPZ3fLW2vHS
+1u/N0u/M0e/L0O7Izu3Fy+vAxuq7wum4v+i3vue0u+eyuuexueWtteWstOSqs+SqsuKlreKiq+Gf
+qOCep+Cdpt+bpd+Zo96WoN2TndySnNyRnNyPmtuMl9qJldmIk9iFkdiCj9eCjteBjdZ+i9Z9itV8
+idV7iNR3hNN2g9N1gtJwftFte9BsetBqeM9peM9od89mdc5kc85jcs1icc1hcc1gcMxgb8xebsxd
+bctcbMtaaspZaclVZclUZMhSY8hQYcdOX8ZNXsVKW8VIWsRGWMNCVMJAU8I+UcI+UME9UME7TsA5
+TcA4S782Sr81Sb80SL4zR74zRr0xRQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5
+BAkAAHUALAAAAAAwADAAAAj+AOsIHEiw4EABHlLg+GHEyA8cKTwIMEixosWBDV5AkaPmChEdNGjo
+IHJFjRwoLxpcXEmRAxI6V2BouKgBxhU6SDiwZCkByRwgFnYOtABkDhIJQimucHNkQtKCE464WfFU
+4IEjaERUpSgCzZEDSR1ooQJha0UIVLQ42OkAjBICZi0SUAJm7UUDWZIAiHsRQJIsBi4eoQKX70UC
+VI5YZIGmrOGVENCwoCjBzYjHO0e4QVoQCRLMQj0X3DDHKWiWE+ZsIHgEyGmCMHpUBKJYIAM6QV/X
+IfHmQ0ULdBgIdIFFd50MbVBcxOJC4JMYuheIybEyxpM6AuLMPB3ACZO9NOP+CPiQRveOMAl2pvmQ
+osprFWwuCK2iAseQ0yDgaBUqZOEO0BSg8cJTOvxQhA2YFdBFEFXVUMSBmCFhxQANFvHDfxaVgMFK
+M5jxwFYF2neRDGfkRpEJb3Rg1hAQWbESD2VQ0JIbJ8RlhQrksQTEGBEU5AAZN/C1XnbbWQRAEV+o
+JFAAUizBlwbi1fEcSwEowYUCAvngBVhxWTdccSwN0IQVB7SwRgWGMWcbbjsVMMUWcIRgGHDCCdSa
+UAhEMZlhtBFEmmnGUZTaagSJFihFhhJU2WWHEqQZZwUx5lijke1J0WCFBYpYbRXhpVegfgG2Ultv
+6TZXXWyNNeljaKmV1FU6WWHW1VdbLdVUXFFNxVdPP5m4E1FGQcqXSzDJRJNNOOn0WkYbdfRRSCOV
+dFJKjWKX0EINPRTRRFUFBAA7
+}
+
+set Icon115 {
+R0lGODlhMAAwANUAAP////7+/v39/fz8/Pv7+/r6+vn5+fj4+Pf39/b29vX19fT09PPz8/Ly8vHx
+8fDw8O/v7+7u7u3t7ezs7Ovr6+rq6unp6ejo6Ofn5+bm5uXl5eTk5OPj4+Li4uHh4eDg4N/f397e
+3t3d3dzc3Nvb29ra2tnZ2djY2NfX19bW1tXV1dTU1NPT09LS0tHR0dDQ0M/Pz87Ozs3NzczMzMvL
+y8rKygAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAADYALAAAAAAwADAAAAj+AG0I
+HEiw4EAACSJk6AACRIcMERIAMEixosWBAiiUmAHjxIcNGDBs+HACxowSFARcXEnxQIgZJyocuHig
+wokZIWayXEngZQcDOwca6ICTQFCKEmKAMHqUIAEQMSQ0FRgAxAsGUykyeAEiwNEBKE4MyFpxwAkU
+Y1kOWCHCK9mKAUSsSGsxAAoRE99aBCAChduKIE781Qv3BAiLE17QJWxxwIsJFAnEwMqYJYMYTAmG
+CKE3wIUEQTcXPDAjs8UFIWRQIBigBAsZKlLynKFToMOLAyywgLHBAQwOEwOYEBxgQgoZH0BbZIhx
+BlCKqGeYgJC3AIsRAU4IJoigQ4zYKg3+GpgRnsIJirp5PxeYcUWMBCNmkHiQl+oEFTIKUDyx2kaJ
+CgYB0AIL4QmUwAcyoCCBWwRk4IILGegnUAEteFAfQRWUYAMAMtRGkFloZaRCDB14eJAD8ZHggAEu
+cGDRATIgBENdIbyQ4IIsEYCBCzVssBIMCZ1X1weUfaUBCSYWdIIEGXxQlwkunEQfS9GZ4MFkFn2w
+kI8UCXCCCQHo6MILGkhYUG67bfCcBDJIRdEGDGFAkV0l/AVAA/GVMKUNVVJHkAIo1GAmQRg0JKdB
+ZiGnQEFizlAAATSgsJ4NIpKIQEWFdsBlS96BNxCFNADVQAyHHigDCzhaBGeTK2nQF3L/CbDIgQzP
+IeDCCClYWsNiFGkZgZDL+dhdDDNoYAOtAz2V6q4rLZnAjBdpOlAACwiEbEXMXgQkh0kSJK1B11KU
+bUUwTvRftJsSFK5B41KUoUDmXaSBCxYUaO2kAg0wQQk0DGYQf+w5t9evMyQ3ULgFWHACDSdYMKh4
+5A1020oHdCBDChMEQCsCGahwEgWmLXfYQKSFDBcFI9JgowgR2DubiaIdpYAIDvi7U8xOYVnZSpeZ
+bENivO784WMWBWaz0NmNDNddFwrNl18rrdWW0FTJFTRFYIklNIhXw2VVkXpt1VVWSS311lNR6dXT
+DD81NVRRlbkEk0w02YRTt3pltFFHFB+FNFJJH7tM9YYJLdTQQxE1vVNAADs=
+}
+
+
+set Icon116 {
+R0lGODlhMAAwAPcAAP////7+/v39/fz9/fz8/Pv7+/r6+/n6+vj5+fj4+Pf3+Pb39/X29vT19vT0
+9fP09PLz8/Hy8/Dx8vDx8e/w8e7v8O3u7+zu7uzt7uvs7err7Onr7Ojq6+jp6ufo6ubo6eXn6OTm
+5+Tl5+Pl5uHj5eDi5ODi497g4t3f4Nze4Nrd3tnc3dja3Nfa29XY2tXX2dTX2dHU1tDT1c7R1M3R
+08zP0crO0MnNz8nMz8jLzsbKzMXIy8TIysPHysHFyL/Dxr7Cxb3Cxb3BxLzAw7q/wrq+wbm9wLi9
+wLa7vrW6vbO4u7K3u7K3urG2ubC1ua+0uK60t66zt62ytqyxtaqwtKqvs6musqiusqetsaassKWr
+r6SqrqOpraKoraKorKGnq5+lqp6kqJ2jqJuippuhppqgpZmgpJifo5eeo5edopadoZWcoZOan5Oa
+npKZnpGYnZCXnI+Wm4yUmYuSl4qRl4mRloiQlYePlIeOlIaOk4WNkoSMkoOLkYOLkIKKkIGJj4CI
+jn+IjX+HjX6GjH2Fi3yFi3uEinuDiXqCiHmCiHiBh3iAhneAhXZ/hXR9g3N8gnJ7gXF6gXB5f253
+fm13fWx2fGx1fGp0emlzemhyeWhxeGdxd2Zwd2VvdmRudWFrcmBrcmBqcV5ocFxnblxmbltlbVpl
+bFlka1hja1diaVZhaVVgaFRfZlJdZVFcZFBbY05aYU1YYEpWXklVXUdTW0ZSWkVRWkVRWUVQWURQ
+WENPWEJOV0FOVkFNVUBMVT9LVD5LUz1KUz1JUjxIUTtIUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAAMUALAAAAAAwADAA
+AAj+AIsJHEiwIEENN6aIaeNmTBUdHwxKnEiR4IAdel4BE1VIjho1cgR96iUrUBADFVNKpLCm1qkw
+LwRMDLBiS6hdcjioVJkgTa9AKnYOJFHH15wHQiXagCVpRNKCGgrRAvJUYIAyuYZUlYhj1pwCSQ0k
+EhVxq8QKmCwx2FmA0iQFZikWMBSqQcoAiSiBjUsxwCBMKCmeEQWXb0UClfRQtHHLg2GVEWIZkZgA
+FtXHKmPcomBwDSTMQvX4KWjBl4iCC55wWc2aSxGZfCXwKkGQTSCDii7d2c37jqkvj9kAGljgVgqD
+rFpIhFLoMYZgEAT6ICUx+XJXe7Jr377HiUpJUQT+AvJSXbnBDltaq1+dQ2USSgJjsSgPemKGYAU6
+9ApAX+CHHgAGKOCABMIwUSsv5ADKRNYJ5MkomkQo4YQUTqiKKxM5kgQVgjBo3gXBLGCWG3JM5EYa
+Y8ThoUBRPBJXKzRM1IUdb5ixYjGUKGFWCrbAZpAUg8BBxooPCCOBWWPwQVEUhZQBx4pIYBJXKTxQ
+tAUeWIxGXyNVmAWCL4FJpAYbPHjiYQLAbGCWFohUtEgTIuQCQHk/LGiWJ0RUlIoMANRyQnmCALfV
+BcKsNZEEwyRQDCJWVPfCLiSYBUUkFQmxiUBHdFLdFKnENQkTFSmyhUAJ+BICcoygYZYDwkxA0QPf
+wGAwkB0lFsQKLnmsp+t6e2hSERiOEPSlBQVdQUdvyCabbA0UKVCLCwXl8Ud9Kq3hYkES2DIDtRSd
+0AsIEhkRSwTcGoQAKlpQtIckA5Q7EACARDLnRAdw8se85a6BClIVPXAKHz6CBoAasGiwEwSePOJA
+fQf4gYrBQiEQiCvQPmZCKZDw+5QSuswRnVkJqNGLFvhWhQEhupjBWVIOeEFLJKc+hoIhwThCxMoT
+QfBDIb888gK3FFyRyTCrLKKGFk4skQUah6BCjCdeQOxuMQfE4EQbeySiSB9wSEGDiFUFBAA7
+}
+
+set Icon117 {
+R0lGODlhMAAwANUAAP////7+/v39/fz8/Pv7+/r6+vn5+fj4+Pf39/b29vX19fT09PPz8/Ly8vHx
+8fDw8O/v7+7u7u3t7ezs7Ovr6+rq6unp6ejo6Ofn5+bm5uXl5eTk5OPj4+Li4uHh4eDg4N/f397e
+3t3d3dzc3Nvb29ra2tnZ2djY2NfX19bW1tXV1dTU1NPT09LS0tHR0dDQ0M/Pz87Ozs3NzczMzMvL
+ywAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAADUALAAAAAAwADAAAAj+AGsI
+HEiwIMECDixo6NBBg4UHBgxKnEiRIIAHIFzMWDHCAwcOHkSomAFDRIQAFVNKJMAhBgsNCwBMBKAA
+gwoZHiKqTCmAwwwRCXYORPBhxocBQiU6eGHiQNKCBUbEiPBUIIANMiRUVQrjA0qhAUas0LnVIAEU
+JwTsDHDChNqyE8OqeEsRwIgTX+HOFIEir8QNK+jqjXsCBEUHMcgOpjjghVaDAl5QXaySQQwCBjmU
+oCwURIiCBGY4JSigAobTqDFIkKmXgAwEBDmIMEiiMIjbuFlkWCx7YIAYQQu2UCCxwojFBWYgrQFh
+hcThxV3gnj69gkoT1muI2G0QukEDqcP+o3agcsIJgS+Id1fP2WDyAAZmsBbO3gCE+/jz69+/YKKL
+BQ6oMJF3NaSwAgoIJqjgggq24MJEJUxgwWzPqZecYEl14MFEHXCgwYYVClTBZmW50MBEGHzQwQYD
+qncCBWUlEMN8BU3YUIs1DEADZltp8NlExm3QAY4ToAAXCw9QhAEIF/y4Xg0kWFDWATP4VdBHD6TQ
+ogAzFFAWBsdRREIFB8hA40DDRSBgWSk8NiADAMQA23rblVUADRgSRACeNYxwwXMLvFZWBSZUFIGR
+NUygZXcWtACXCTCKiYFAXI5GUAsksLiVjjxKNECXA30A4qUxgCDeqeKBgOhEGZAoEJWznQpkgQfU
+1WorbidOJEAM/RHkWXsqaWZWDLkCKxECokkkwQvLGUtQACxMOhEIJpwJLAAiVEtRACmEYC1nHLDQ
+7EQDsOCtsQBw8IKXKg2QQgnjDhZACCywu5YI/1GGAAvwbkWBDEfB1dMMGHy7UwEiyLBBrO1mEENT
+lCUwwgwlSMBwQQNEMHEJvbZHwAUo0IApBxhUQMEFG4zAAg0pZGCvszUEwEAFHYAwAgkhdGBBA3mq
+FBAAOw==
+}
+
+set Icon118 {
+R0lGODlhMAAwAMQQAMAeSO7DzsQtVNVphealtvfh5/vw8/LS2tFaeeq0wtl4ksk8YeKWqc1Lbd2H
+nbwPPP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEA
+ABAALAAAAAAwADAAAAX/ICSOZCkGTiM8bCs0TmDOdA0VA/AAiJMEwEDCgVgBBgebshRoPASKpPLg
+WDVky5ph8CRkS4nFA2H4MgEAhnlGQCfWEMKjUYDPDIiHwswd2G0OD35LXF5/NnKDNXJqh0pyDjUH
+go5ZgW8mBgILlV8IAGUlCgB1nUsGRyUFD5GHBkMIDTChbA9YIgMCtGs4LC+yD4Y0LyOrjXCBAg6l
+IgutNHKlDqBwBmIOuyIwSlAiAopf1gBJCiwNoQDPNKM3D5hmC+MQDKxtfga2Uw8Hcsj72g1EKAgo
+J9uMdAN5sRqRq4wsCA+XIIgFrgaKFNREFECz4kcwSwuU2TAwbYcTdTcc/yyDKOCLnI80rLFiBihf
+lgAsbpmIJ2UJJDM4bZpIJstBzxmBKioJKqxEAwAwns6hKeLASTg4RS4VJABBiTwCdLqcs4dbwEB0
+Riz842BBQhsJHtQxwCCVCKFwJvazoYCTCJlz8a5Jt+rdjAaD2ujwEpfql0lJvtl46mRMgW0N/Nph
+B2GawRFUHDAoBYOeWDOS2zVdsonSHzk9c5lZpccRsWJrlxRAcNqMHLGjHJvKZJeEJs3DaXz6PElp
+chGXFsF8PuKnjULURSTK0od6UjP00nbCU3tNADTHXrv5s6WLnQROEAgH6gTKURoFqszp/edAjh09
+/BAELEYMwF8nKKjQggYLMBxIQwgAOw==
+}
+
+set Icon119 {
+R0lGODlhMAAwAMQQAOjYws2re+/l1tGxhcmkcPPr4Pfy6+TRt9zFpNS4j+zezODLrcWeZti+mfv4
+9cGXXP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEA
+ABAALAAAAAAwADAAAAX/ICSOZCkWS0I8bEski2DOdA0ZCPMwMCD8AkBKx2gYbMiSYPAgIArJAmI1
+kCVrjkYTcC0BVg1HV8lgHMazQ9k6BjwGR/TMwDx3tQ05EvHIJ7VcekhufjVugYKDD4gmBX2Jdw9s
+JA4EAZBjAwRiJTlxVwVAnF0GDAglBg8LVwAJLS4In0gLD7INBEkCKzp2Bgo5faM2BIWpjDO0VQ4B
+DFAkagTONm5xasImWmVQy82ozNI0DgyrEAGFaYvLixDcCgUJA0bc19i4qQo1qacigOxMDAQWEGDg
+QFwCJApqubFxS1i/cpvYmYHgZtKMRQgG5FtXokG3AQdFDCD3AsmAjOdK/xx4QG/ZpgXd3BRRQGvP
+gADkZsCjUQqBOh0NFgRoYbGEwAd2ZoyssRKKEHwiHAhAOo1F0RGqoi4AyYaARho4bUyVVCNrOVN1
+fvABIGtE2Bpjk5pYOtUKk1ctRhYocDckDTdvdVZhMkJgYUkHbrEIQNMsMq8pSbhpQrWS33sjqImY
+UqPByUvhHmkZ2m2EkxFTOcGsEQCBG3ojPIoRsODANc8jDPoqEprtA6gzDNpYSYIWiwGwISQ8Ys5G
+wsioWUYNEEAAOGygVyYXQQi2IxkFBl434YCqxJx/t1xsHKAtMun8CCLh2wSBAiArd6DHwntEqf00
+SLHCKwPY1gVMbdEynm0NoWwXoGMkUOcgJtOB1kh/FHZW2gyEZEjDQ4Y84iEJIFYVxohZcMQKAwEs
+KEcBzBwTxVALTIgFLS0mAtM4NlICE4SCGKBFHwo46IACQxqB4gFDPWBObT8csEADTQZg4IgkGABA
+Rk0udhJbcoQAADs=
+}
+
+set Icon120 {
+R0lGODlhMAAwANUgAM3Nzfj4+KSkpLW1tebm5qmpqfLy8q+vr9nZ2dPT09ra2qOjo/n5+bCwsOzs
+7MfHx+vr6+Xl5d/f37u7u/Pz86qqqsjIyLy8vNLS0sDAwODg4M7Ozra2tsHBwZ2dnZ6env///wAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0
+IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4
+bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4zLWMwMTEg
+NjYuMTQ1NjYxLCAyMDEyLzAyLzA2LTE0OjU2OjI3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpy
+ZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRl
+c2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFw
+LzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxu
+czpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIg
+eG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSIgeG1wTU06SW5z
+dGFuY2VJRD0ieG1wLmlpZDo5OUQ0MjFCMDRDQTcxMUU5OEYzQUREMjQ5MDU0MzY0RiIgeG1wTU06
+RG9jdW1lbnRJRD0ieG1wLmRpZDo5OUQ0MjFCMTRDQTcxMUU5OEYzQUREMjQ5MDU0MzY0RiI+IDx4
+bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjk5RDQyMUFFNENBNzEx
+RTk4RjNBREQyNDkwNTQzNjRGIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjk5RDQyMUFGNENB
+NzExRTk4RjNBREQyNDkwNTQzNjRGIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwv
+eDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm
+5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66t
+rKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0
+c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7
+Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMC
+AQAAIfkEAQAAIAAsAAAAADAAMAAABv9AkHBILAohgEnh4/F8mIULgGCsWq8gw2PxWUwACEKEQEAk
+BZ5Fh4JtFwkDT+HhcEMeywHVfQ10PgUKfEUIBR4dDINvCwsJilUJjHuKCB4cBo9WBgMfjoN/HZlt
+Dx+hbh0eCKJulRltlYKrrB+qVg6lsp8eEVUBBQ25igMFAUYPApiDDmIEiYoUCxZFBh4AfAoTTUxO
+BRZsfAAfyUIZFW4EFR5ongYax4fObQWmIBQfsVfhegENAnVEGBYUgMDKw7cEAopd+SNAAEEGB/xN
+60cQSwABG4QcoAfJgwKIHkEEOLBAgoMJA9Yw6KdwYYF6HyRcMfBBmpA/qgJwElAAQIH/hAwETGij
+wYOBSlg6ECOCqtaBpQwagag0yYrHBwNmpjLSQSKHoUIGWANRAOyVAVg5FsHgoeWQkRUCAJCoQF0H
+CeFGDTgwtgpKTQIegBRQCsABJx94XdmQzlMVsVcSfCCoAIBMIQwIfMCApa6HqkU+jJU74MKkAlmt
+NOhbhUAT0EREC+mH1UMCMqQQjCPCF0sEJo6NQNasmBOT407EQnBg3GwVBR8aZLRyQQ+nIT6xfyCQ
+oEM6Dw3wVsuHWi0RBFA6iaxgloKHyyCgJ8OzEC0wKwEOgfhz4IPEIXMMEUFbQgCwwBUHWICeW0V0
+VQwBACTAYAepgRDVBO2ogd891MBn8kRQF2CRgAdEhJMcg0NIYBQIG2EhAS5W/KbQSA1EUJEVHRwg
+hGTxPFdKj0M48BkIEBSwwD99qCfSAqxVUUkgVcQUTgO7WRFOSx0sgGIREHBSgQUSjBGBZF00aUVQ
+HEFjZhUO4LHNEwNgAGQ+yBQRDpJ8QBDBllhAIJsRDRwwZzBG8KMjmwKYR2iD/zkJ46Jc3dNGXa5A
+ytRWbkCHiKV+hDQIAgI0cGMuEPSDzyAQ9AcAn27I9cEBeD5iIJOs9jLXn7kY8McHGUhQawASoFJK
+lbkEkEADTmwU4RgJAJBjEw0kMOiiBiiA1WFPRDeABQoQ20YQADs=
+}
+
+# Start with: wish D:\Siemens\NXStartup\NXStartup.tk quiet
+if {[info exist argv] && [llength $argv] > 0 && $argv == "quiet"} {
+	set info [open [file join $home_parent_path "${home_parent_file}.info"] w+]
+	puts $info [eliminate_zero [lindex [lindex [lindex $config_data 0] 1] 1]]
+	flush $info
+	close $info
+	exit
+}
+
+# Create context menu
+set context [menu .popupMenu -tearoff 0 -takefocus 1]
+$context add command -label "Customer Environment" -command display_custom
+$context add separator
+menu $context.ueproject
+$context add cascade -label "UltraEdit Project" -menu $context.ueproject -underline 0
+$context.ueproject add command -label "No postprocessor found" -state disabled
+$context add separator
+$context add command -label "Open Explorer window" -command {now_explorer 0 0}
+$context add command -label "Open send_to_customer" -command {now_explorer 0 5}
+$context add command -label "Open Visual Studio Code" -command {now_VisualStudioCode 0 0}
+$context add command -label "Start BeyondCompare" -command {compare_start}
+$context add separator
+$context add command -label "Open (template_post.dat)" -command {now_fileopen "/custom/postprocessor/template_post.dat"}
+$context add command -label "Open (machine_database.dat)" -command {now_fileopen "/custom/library/machine/ascii/machine_database.dat"}
+$context add separator
+$context add command -label "Open (tool_database.dat)" -command {now_fileopen "/custom/library/tool/metric/tool_database.dat"}
+$context add separator
+$context add command -label "Link as Development Customer" -command duplicatewindow
+$context add command -label "Erasing selected Customer" -command erasing
+
+wm protocol $root WM_DELETE_WINDOW {exit}
+wm title $root "JANUS - NX Startup - Version $::flag(mainversion).[format %02d [expr [string trimleft [lindex [lindex [lindex $::config_data end] 1] 1] 0]-$flag(cleanupversion)]]"
+wm geometry $root ${windowswidth}x${windowshigh}+200+150
+wm minsize $root ${windowswidth} ${windowshigh}
+create_menu_extended
+update idletasks
+
+bind Listbox <1> {
+	if {[winfo exists %W]} {
+		tk::ListboxBeginSelect %W [%W index @%x,%y] 1
+	}
+}
+bind Listbox <Key> {tk::ListboxQuickSelect %W %A}
+
+bind all <MouseWheel> "+wheelEvent %X %Y %D"
+
+pickup
+
+frame .top
+
+frame .version_list
+button .version_list.title -text "Version" -command compare_start -relief flat -width 7
+settooltip .version_list.title "Starting Beyond Compare with current customer"
+
+frame .customers -relief raised -width 30
+
+frame .status
+frame .status.center
+
+frame .bitversionline -relief sunken  -bd 1 -background grey70
+label .bitversionline.title -text "Version" -height 1 -background grey70 -width $width
+frame .bitversionline.center -relief sunken -background grey70 -width $width
+
+frame .hide
+pack .top
+
+pack .version_list -in .top -side left -anchor nw
+pack .version_list.title -in .version_list -side top -anchor w -padx 5m -pady 1m
+
+versionlist
+
+pack .customers -in .top -side left -anchor nw
+
+listbox .customers.custom_list -exportselection 0 -selectmode single -yscrollcommand [list .customers.scroll_y set] -background grey80 -width 30 -height 20
+scrollbar .customers.scroll_y -orient vertical -command [list .customers.custom_list yview]
+
+bind .customers.custom_list <<ListboxSelect>> [list listbox:select %W]
+
+pack .customers.custom_list -in .customers -side left -expand 1 -fill both -padx 2m -pady 2m
+pack .customers.scroll_y -in .customers -side left -expand 0 -fill y -padx 0m -pady 2m
+
+
+pack .bitversionline -pady 1m
+pack .bitversionline.title -side top -anchor nw
+
+start
+
+# Progress
+frame .progress
+pack .progress
+label .progress.info -text "" -anchor w
+eval pack [winfo children .progress] -side left  -padx 1m -pady 1m
+
+canvas .progress.info.c -width 350 -height 20 -relief flat -highlightt 0 -background grey95
+.progress.info.c create rectangle 0 0 0 20 -tags bar -fill grey80 -outline grey95
+proc run {percent} {.progress.info.c coords bar 0 0 [expr {int($percent * 3.4)}] 40}
+pack .progress.info.c -padx 1 -pady 1 -in .progress.info
+focus -force .progress.info.c
+raise .progress.info.c
+
+pack .status
+pack .status.center -side top -anchor center
+button .status.center.explorer_button -text "Explorer" -command {now_explorer 0 0} -relief flat -image [image create photo -data $::Icon117]
+settooltip .status.center.explorer_button "Starts Explorer with selected environment"
+button .status.center.packit_button -text "PackIt" -command {now_packit} -relief flat -image [image create photo -data $::Icon115]
+settooltip .status.center.packit_button "Starts PackIt"
+button .status.center.ok_button -text "OK" -command "now" -relief flat -image [image create photo -data $::Icon100]
+settooltip .status.center.ok_button "Starts NX with selected environment"
+button .status.center.ok_buttonManagedMode -text "Starts NX in Managed Mode" -command JETIO::Now -relief flat -image [image create photo -data $::Icon120]
+settooltip .status.center.ok_buttonManagedMode "Starts NX in Managed Mode"
+button .status.center.beenden_button -text "Cancel" -command "cancel" -relief flat -image [image create photo -data $::Icon101]
+settooltip .status.center.beenden_button "Exiting NX Startup"
+
+if {![file exists [JETIO::CheckEnv "NXStart.bat"]]} {
+	pack .status.center.explorer_button .status.center.packit_button .status.center.ok_button .status.center.beenden_button -padx 1m -pady 1m -in .status.center -side left -anchor nw
+} else {
+	pack .status.center.explorer_button .status.center.packit_button .status.center.ok_buttonManagedMode .status.center.ok_button .status.center.beenden_button -padx 1m -pady 1m -in .status.center -side left -anchor nw
+
+#	if {[JETIO::IsRunning]} {
+#		set JETIO::VMrunNow 1
+#		.status.center.ok_buttonManagedMode configure -image [image create photo -data $::Icon119]
+#	}
+}
+
+frame .logo
+pack .logo
+button .logo.picture -relief flat -image [image create photo -data $janus] -command {now_explorer 0 2}
+pack .logo.picture -in .logo -side left -anchor nw
+
+# Information
+frame .information
+pack .information
+label .information.info -text "" -anchor w
+eval pack [winfo children .information] -side left  -padx 1m -pady 1m
+
+update
+
+proc canvas'text'update {canvas tag _var - -} {
+    upvar $_var var
+    $canvas itemconfig $tag -text $var
+}
+
+set progress 0
+set flag(progresstep) 0
+
+proc progress {step {after 10}} {
+
+	global flag progress
+
+	if {$step > 0.0 && $step < 1.0} {
+		if {$flag(progresstep) == 0} {
+			set flag(progresstep) $step
+		} else {
+			if {[expr $flag(progresstep)+$step] < 1.0} {
+				set flag(progresstep) [expr $flag(progresstep)+$step]
+				return
+			} else {
+				set flag(progresstep) [expr 1.0-($flag(progresstep)+$step)]
+				set step 1
+			}
+		}
+
+	}
+
+	set init $progress
+	set progress [expr $progress+$step]
+
+	set i $init
+	while {$i < 100} {
+		run $i
+		after $after
+		update
+		if {$i >= $progress} {break}
+		set i [expr $i+1.0]
+	}
+
+}
+
+.progress.info.c create text 170 9 -tag vartext
+trace var information w [list canvas'text'update .progress.info.c vartext]
+
+set image {
+R0lGODlhqgCPAHcAACH5BAEAALYALAAAAACqAI8Ah3t7e3uEe3uEhISEhISMhISMjIyMjIyUjIyU
+lJSUlJSclJScnJycnJylnJylpaWlpaWtpaWtra2tra21ra21tbW1tbW9tbW9vb0hOb0pOb0pQr0x
+Qr0xSr05Sr29vb3Gvb3GxsYhOcYpOcYpQsYxQsYxSsY5SsY5UsZCUsZCWsZKWsZKY8ZSY8bGxsbO
+xsbOzs4hOc4pOc4pQs4xQs4xSs45Ss45Us5CUs5CWs5KWs5KY85SWs5SY85Sa85aa85ja85jc85r
+e85ze87Ozs7Wzs7W1tYpQtYxQtYxStY5StY5UtZCUtZCWtZKWtZKY9ZSY9ZSa9Zaa9Zac9Zjc9Zr
+c9Zre9Zze9ZzhNZ7hNZ7jNaEjNaElNaMlNbW1tbe1tbe3t4pQt4xSt45Ut5CUt5CWt5Sa95aa95a
+c95jc95je95re95zhN57hN57jN6EjN6ElN6MlN6MnN6UnN6Upd6cpd6crd6lrd7e3t7n3t7n5+c5
+Uudre+drhOdzhOd7jOeEjOeElOeMlOeMnOeUnOeUpeecpeecreelreelteetteetvee1tee1vee9
+vefn5+fv5+fv7++Upe+cpe+cre+lre+lte+tte+1ve+9ve+9xu/Gxu/Gzu/Ozu/O1u/W1u/W3u/v
+5+/v7+/39/fGxvfGzvfOzvfO1vfW1vfW3vfe3vfe5/fn5/fn7/fv7/f39/f////n7//v7//v9//3
+9//3/////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAj+AGsJHEiwoMGDCBMqXMiwocOHECNKnEixosWLGDNq3Mixo8ePIEOKHEmypMmTKFOqXMmypcuX
+MGOyjJVpjhstcS6tksmz58FVcHCUGEF0xIwTblD5XCozUQ4ZGaJiyIBBQwYZNxIx3cqyUIkQVK1m
+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
+AQA7
+}
+
+set ok {
+	R0lGODlhPAA8AHcAACH5BAEAAAAALAAAAAA8ADwAh/8A/ykpKTAwMDc3Nzyx
+	AEFBQUGzAUS1BkW1DUxMTEm3CUu4EEq9CE26Dky4F1FRUVC7ElS8F1O6H1LG
+	GFhYWF+wMVi/Glq/IFy+KFrGGF3CIFrGKWNjY2G/MGDDI2PEKGbDMGbCOWxs
+	bGu2QGjHLGrIMGzGOG3FQWvOKW7LM2/LNnR0dHG+QnS8SXLHQXPGSXDMNXPN
+	OXfMQnPOSnPWOXp6enm+TnjKSHvEUXvOOXnQQHzNTH3LU3zKWXvWOX3TRYSE
+	hIHEWYfGX4TOSoLPU4PPWoXOYYTWQoLVSofYUIjTWoTWY4TeUo6OjorQZIrU
+	XI7UY4/TaovaVJSUlJLXZpTXbJbVc5fVeJTeY5Tea5ycnJnYc5zYepnbbp3c
+	dJ7beaWlpaDNhaHfd6LefKXdg6fciqXnc6jkfanjga6urq3Vlq/Vmqrihazg
+	jK/gk6vnfazlhK/kjLDjka3vhLW1tbLXm7PgmrbdorPnjbPklLbknLXnpbXv
+	hLfsjbnskb+/v77dq73nnLzlpcDlq73vjLzvk733lMTExMLoqMPnrcbns8bv
+	pcbvrcbvtc7OzszqvM7vtc7svtDswtbW1tbvvdXux9jtzd7e3tzv0d7u1d73
+	zt731ufn5+f31uf14Or24+/v7+345+//5/L57vj4+PX68fn89/8A//z9+/7+
+	/gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAj+AAEIHEiwoMGD
+	CBMqXMiwocOHEBeSmpgqokWIpC5N2giqI6dJly6BukiyICmOpFKpXLmSFCiQ
+	pEpafAmKpc2bqUh9jCmT4cmaKk1lGkTGSY8eRrbowWTKpk5OPROm4pQylalH
+	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
+	LNb618AOtkwCAgA7
+}
+
+set abort {
+	R0lGODlhPAA8AHcAACH5BAEAAAAALAAAAAA8ADwAh/8A/ygoKC8vLzk5OUBA
+	QEpKSlRUVF1dXWZmZmxsbHNzc3t7e4SEhI0KCo8aGoyMjJUJCZOTk5wJCZyc
+	nKJoaKBxcaWlpa4REa4aGq8iIq5wcKl5eayEhK6Nja6Tk66urrUICLIsLLc7
+	O7BcXLVsbLWMjLejo7W1tbhkZL1ra7t8fLuEhL6Li7mVlb6jo76rq7+/v8Uj
+	I8MuLsE4OMFDQ8OGhsOTk8eamsOvr8TExM8AAM8ICNAQEMpMTM9WVsu8vM7G
+	xs7OztYAANUICNUQENMYGNQhIdUpKdYxMdc5OdfKytbOztbW1t0AAN4HB90R
+	Ed4ZGd8hId8pKd8xMd86OtxCQtxKSt5SUt9ZWd9kZN9ra9h3d97e3uYAAOcI
+	COYQEOYaGugiIuYoKOcxMeY5OeZDQ+ZLS+dRUeZZWehjY+dsbOZzc+d7e+eD
+	g+iMjOjf3+fn5+wAAO4ICO4ODu8YGO0gIO4rK+4zM+85Oe0/P+1MTPFUVO5a
+	Wu5jY+1ra+5zc+17e+6EhO2MjOyTk+ybm+6lpe+urvC1te7q6u/v7/cICPcp
+	KfcxMfc5OfdSUvRaWvdjY/dra/dzc/eEhPaOjvelpfetrfq4uPO8vPTFxfbN
+	zfjW1vjd3fnu7vj4+P8A//+UlP+9vf/Gxv/Ozv/W1vze3vnn5/zx8f34+P7+
+	/gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAj+AAEIHEiwoMGD
+	CBMqXMiwocOHEBem8kQxokWInuBw4cIETqJEcJhshJPqokmCqThy8ZSqpUuX
+	FJkESXTSoqeOLF/q1OkpEReaNRmm6vjSFKZBa7JgybJmUKZOOxMxKRkUoceW
+	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
+	aIPQToro0C0O6Yk/fwniEpv4xChGSEAAADs=
+}
+
+set batchbody {
+	goto CHECKLOCALVERSION
+
+	:CHECKLOCALVERSION
+	echo.
+	echo -----------------------------------------------------------------
+	echo NX-Startup Update
+	echo.
+	echo Copyright 2013-2018 JANUS Engineering
+	echo.
+	echo Die Quellcodes der Programme sind urheberrechtlich geschuetzt und
+	echo duerfen ohne Zustimmung von JANUS Engineering weder kopiert noch
+	echo fuer andere Zwecke weiterverwendet werden.
+	echo.
+	echo The source codes of the programs are in copyright protected and
+	echo may be copied without agreement by JANUS Engineering neither nor
+	echo re-used for other purposes.
+	echo.
+	echo Le contenu de ces programmes sont protégés par copyright
+	echo et ne peuvent pas être copiés ou réutilisés sans l'agrément
+	echo de JANUS Enginnering
+	echo -----------------------------------------------------------------
+	echo.
+	if exist %local_info% goto ANALYSELOCALVERSION
+	goto ENDE
+
+	:ANALYSELOCALVERSION
+	set /a num=0
+
+	for /F "delims=" %%a in (%local_info%) do call :OUTPUTLOCAL "%%a"
+	goto CHECKSERVERVERSION
+
+	:OUTPUTLOCAL
+	echo -----------------------------------------------------------------
+	echo Local information
+	echo -----------------------------------------------------------------
+	set /a num=%num%+1
+	echo Text line is %1
+	echo Line number=%num%
+	set local%num%=%1
+	echo Variable content=!local%num%!
+
+	:CHECKSERVERVERSION
+	if exist %server_info% goto ANALYSESERVERVERSION
+	goto ENDE
+
+	:ANALYSESERVERVERSION
+	set /a num=0
+
+	for /F "delims=" %%b in (%server_info%) do call :OUTPUTSERVER "%%b"
+	goto CHECKVERSION
+
+	:OUTPUTSERVER
+	echo.
+	echo -----------------------------------------------------------------
+	echo Server information
+	echo -----------------------------------------------------------------
+	set /a num=%num%+1
+	echo Text line is %1
+	echo Line number=%num%
+	set server%num%=%1
+	echo Variable content=!server%num%!
+
+	:CHECKVERSION
+	if %local1%==%server1% goto ENDE
+	if exist %local_startup% goto CHECKSERVER
+	goto ENDE
+
+	:CHECKSERVER
+	if exist %server_startup% goto ACTION
+	goto ENDE
+
+	:ACTION
+	echo.
+	echo -----------------------------------------------------------------
+	echo Interaction
+	echo -----------------------------------------------------------------
+	if "%time:~0,1%" lss "1" (
+	set datetime=%date:~6,4%-%date:~3,2%-%date:~0,2%-0%time:~1,1%-%time:~3,2%-%time:~6,2%
+	) else (
+	set datetime=%date:~6,4%-%date:~3,2%-%date:~0,2%-%time:~0,2%-%time:~3,2%-%time:~6,2%
+	)
+	for /F "delims=" %%a in ('FindStr /R "[0-9]" %local_info%') do set localversion=%%a
+	echo Rename File %local_startup%
+	echo To %file%_Version%local1%_%datetime%.tk
+	rename %local_startup% %file%_Version%localversion%_%datetime%.tk
+	echo.
+	echo Copy File %server_startup%
+	echo To %local_startup%
+	copy /y %server_startup% %local_startup%
+	goto ENDE
+
+	:ENDE
+	echo.
+	echo -----------------------------------------------------------------
+	echo Footer information
+	echo -----------------------------------------------------------------
+	echo.
+	echo Finish...
+}
+
+
+proc add_frame {title {bgcolor yellow1} {pack 0}} {
+
+	global frame custom_count w
+
+	set frame .line.line$custom_count
+
+	if {$pack} {
+		frame $frame -border 0 -relief sunken -bg $bgcolor
+		label $frame.label -text $title -bg $bgcolor
+		pack  $frame -padx 0 -pady 0 -anchor n -fill x
+		pack  $frame.label -side top  -padx 0 -pady 0
+	} else {
+		if {$title == ""} {
+			frame $frame  -bg $bgcolor -relief flat
+		} else {
+			button $frame -text $title -anchor n -bg $bgcolor -relief flat -width 82
+		}
+		.line.t window create end -window $frame
+	}
+	incr custom_count
+}
+
+proc add_button {title {filename ""} {width 80} {anchor w} {side left} {pack 0} {state ""}} {
+
+	global frame custom_count color name ultraedit
+
+	set button "${frame}button${custom_count}"
+	if {$state == ""} {
+		if {[string trim $filename] == ""} {
+			entry  $button  -width $width -bg $color -relief flat -textvariable $title
+			trace variable $title w change_entry
+		} else {
+			button $button -text $title -width $width -anchor $anchor -bg grey90 -relief flat -command "exec [file tail $ultraedit] $filename &" -relief raised
+		}
+		if {$pack} {
+			pack $button -side $side -pady 0 -padx 0 -fill x
+			settooltip $button "Open File: $filename"
+		} else {
+			.line.t window create end -window $button
+		}
+	} else {
+
+		if {[string trim $filename] == ""} {
+			if {[subst $$state] != ""} {
+				if {[subst $$state] == "Inactive"} {
+					button $button -command "switch_button $button $state ${frame}button[expr $custom_count+1] ${frame}button[expr $custom_count+2]" -text [subst $$state] -width $width -anchor $anchor -relief raised -bg white -fg grey50
+				} else {
+					button $button -command "switch_button $button $state ${frame}button[expr $custom_count+1] ${frame}button[expr $custom_count+2]" -text [subst $$state] -width $width -anchor $anchor -relief sunken -bg white -fg black
+				}
+			} else {
+				button $button -text $title -width $width -anchor $anchor -relief flat
+			}
+		} else {
+			button $button -text $title -width $width -anchor $anchor -bg $color -relief flat -command "exec [file tail $ultraedit] $filename &"
+		}
+
+		if {$pack} {
+			pack $button -side $side -pady 0 -padx 0 -fill x
+		} else {
+			pack $button -side $side -pady 0 -padx 0 -fill x
+			.line.t window create end -window $button
+		}
+	}
+	incr custom_count
+	return $button
+}
+
+proc switch_button {button state element1 element2} {
+
+	trace variable $state w change_entry
+
+	if {[subst $$state] == "Inactive"} {
+		$button configure -relief sunken -text Active -fg black
+		$element1 configure -bg white -fg black
+		$element2 configure -bg white -fg black
+		set $state Active
+	} else {
+		$button configure -relief raised -text Inactive -fg grey50
+		$element1 configure -bg white -fg grey50
+		$element2 configure -bg white -fg grey50
+		set $state Inactive
+	}
+	update
+}
+
+proc source_silent {file args} {
+
+	set argv $::argv
+	set argc $::argc
+	set ::argv $args
+	set ::argc [llength $args]
+	set code [catch {uplevel [list source $file]} return]
+	set ::argv $argv
+	set ::argc $argc
+	return -code $code $return
+
+}
+
+set context_ueproject 1
+set library [file join $env(JE_POOL_NGMK) "lib_sourcing.tcl"]
+if {[file exists $library]} {
+	source_silent $library "passive"
+} else {
+	set context_ueproject 0
+}
+
+proc context_ueproject {} {
+
+	eval global [uplevel #0 info vars]
+
+	if {!$::flag(projects)} {
+		$context.ueproject delete 0 end
+		$context.ueproject add command -label "Creating projects is deactivated" -state disabled
+		return
+	}
+
+	if {!$context_ueproject} {
+		$context.ueproject delete 0 end
+		$context.ueproject add command -label "[file join $env(JE_POOL_NGMK) "lib_sourcing.tcl"] not loadable" -state disabled
+		return
+	}
+
+	$context.ueproject delete 0 end
+	find_postprocessor
+
+	update
+
+}
+
+#____________________________________________________________________________________________
+# gets the current library release version of an existing post config post
+#____________________________________________________________________________________________
+proc get_library_release_version {mkname} {
+
+	global flag tcl_platform customerversion customer_string
+
+	set tcl_platform(platform) windows
+	set lib_release_version ""
+
+	#get library release version of mkit
+	set lib_sourcing [format_path_names [file join $flag(srcdir,$customerversion,$customer_string,$mkname) Libraries "lib_sourcing.tcl"]]
+	source_silent $lib_sourcing "passive"
+
+	return $lib_release_version
+}
+
+proc snapshot {arg1 {arg2 ""}} {
+
+	eval global [uplevel #0 info vars]
+	global snapshot_reset_list
+
+	if {$arg1 == "CREATE"} {
+
+		foreach var $arg2 {
+
+			if {[array names $var] != ""} {
+				foreach n [array names $var] {
+					lappend snap_list "${var}($n) [subst $\{${var}($n)\}]"
+
+				}
+			} else {
+				if {[info exists $var]} {
+					lappend snap_list "$var [subst $\{$var\}]"
+				}
+			}
+
+		}
+
+		return $snap_list
+
+	} elseif {$arg1 == "LOAD" || $arg1 == "UNLOAD"} {
+
+		if {[info exists snapshot_reset_list] && $snapshot_reset_list != ""} {
+
+			foreach a $snapshot_reset_list {
+				if {1} $a
+			}
+			 unset snapshot_reset_list
+		}
+
+		if {$arg1 == "LOAD" || $arg1 == "LOAD_PERMANENT"} {
+			foreach var $arg2 {
+				foreach {name value} $var {break}
+				if {$arg1 != "LOAD_PERMANENT"} {
+					if {![info exists $name]} {
+						global [lindex [split $name "("] 0]
+						lappend snapshot_reset_list "unset $name"
+					} else {
+						lappend snapshot_reset_list "set $name [subst $\{$name\}]"
+					}
+				}
+				set $name $value
+			}
+		}
+	} else {
+		#WRONG ARGUMENT PASSED TO PROC
+	}
+}
+
+proc find_postprocessor {{toggle 1}} {
+
+	global snapshot flag frame env selected context progress
+	global customer_dir_path customerversion customer_string
+	
+	#Rename Folder, if it's wrong named
+	set path [format_path_names [file join $customer_dir_path $customerversion $customer_string] 0 2]
+	set old_ueprojectpath [format_path_names [file join $path "UEProject"] 0 2]
+	set ueprojectpath [format_path_names [file join $path "UEProjects"] 0 2]
+	if {[file exists $old_ueprojectpath]} {
+		set error [file rename -force $old_ueprojectpath $ueprojectpath]
+	}
+	
+	set snapshot(1) [snapshot CREATE [info vars flag*]]
+
+	set progress 0
+	set flag(progresstep) 0
+
+	if {[string match -nocase $customer_string "_default"] || [string match -nocase $customer_string "copy"]} {
+		$context.ueproject add command -label "Check deactivated, no valid customer environment" -state disabled
+		return
+	}
+
+	if {[info exists flag(find_postprocessor,$customerversion,$customer_string)]} {
+		if {[info exists flag(postprocessor,$customerversion,$customer_string)]} {
+			button_ueproject $flag(postprocessor,$customerversion,$customer_string)
+		}
+		return
+	}
+	set flag(find_postprocessor,$customerversion,$customer_string) 1
+
+	.information.info configure -text "Reading the postprocessors"; update
+
+	set flag(find_postprocessor) 0
+
+	set machinepath [file join $customer_dir_path $customerversion $customer_string "custom" "library" "machine" "installed_machines" ]
+	progress 5 5
+	set folder [LIB_Shell_file_glob $machinepath f]
+	progress 5 5
+
+	set index [lsearch -glob $folder "*.psc"]
+	if {$index > -1} {
+		set ppname [file rootname [lindex $folder $index]]
+		set flag(srcdir,$customerversion,$customer_string,$ppname) $machinepath
+		set pscname [lindex $folder $index]
+		set flag(pscname,$customerversion,$customer_string,$ppname) $pscname
+
+		progress 90 2
+
+		set flag(rel_version,$customerversion,$customer_string,$ppname) [get_library_release_version $ppname]
+
+		lappend flag(postprocessor,$customerversion,$customer_string) "$context.ueproject add command -label \"$ppname\" -command {create_ueproject $ppname}"
+		set flag(find_postprocessor) 1
+
+	} else {
+
+		set found_dirs [list]
+		progress 5 2
+		set dirs [LIB_Shell_file_glob $machinepath r]
+
+		set count 25.0
+		set progresscount [expr $count/([llength $dirs]-1)]
+
+		foreach n $dirs {
+
+			set count $progresscount
+			progress $count 2
+
+			#by default we only accept directories containing /bin
+			if {[string equal -nocase [file tail $n] bin]} {
+
+				set tmp [split $n \\]
+				set parentdir [lindex $tmp [expr [llength $tmp] -2]]
+				if {[string equal -nocase $parentdir postprocessor]} {
+					set parentdir [lindex $tmp [expr [llength $tmp] -3]]
+				}
+				if {[lsearch $found_dirs $parentdir] <0} {
+					lappend found_dirs $parentdir
+					set flag(srcdir,$customerversion,$customer_string,$parentdir) [string range $n 0 end-4]
+				}
+
+			} else {
+
+				#if we don't find a bin dir - maybe we have a old structure in postprocessor..?
+				if {[string equal -nocase [file tail $n] postprocessor]} {
+					set tmp [split $n \\]
+					set parentdir [lindex $tmp [expr [llength $tmp] -2]]
+					if {[lsearch $found_dirs $parentdir] <0} {
+						lappend found_dirs $parentdir
+						set flag(srcdir,$customerversion,$customer_string,$parentdir) $n
+					}
+				}
+
+			}
+
+		}
+
+		set count 60.0
+		set progresscount [expr $count/([llength $found_dirs]-1)]
+
+		#only consider paths which contain .psc files or match the rules for pplib posts
+		foreach n $found_dirs {
+
+			set tmp [LIB_Shell_file_glob $flag(srcdir,$customerversion,$customer_string,$n) f]
+
+			set count $progresscount
+			progress $count 2
+
+			set index [lsearch -glob $tmp "*.psc"]
+			if {$index > -1} {
+				set pscname [lindex $tmp $index]
+				set flag(pscname,$customerversion,$customer_string,$n) $pscname
+
+				set flag(rel_version,$customerversion,$customer_string,$n) [get_library_release_version $n]
+				lappend flag(postprocessor,$customerversion,$customer_string) "$context.ueproject add command -label \"$n\" -command {create_ueproject $n}"
+				set flag(find_postprocessor) 1
+
+			} else {
+
+				set check_pplib_post [check_pplib_post $n]
+
+				if {$check_pplib_post == 1} {
+					set flag(pscname,$customerversion,$customer_string,$n) $n
+					set flag(rel_version,$customerversion,$customer_string,$n) "pplib"
+					lappend flag(postprocessor,$customerversion,$customer_string) "$context.ueproject add command -label \"$n\" -command {create_ueproject $n} -state disabled"
+					set flag(find_postprocessor) 1
+
+				} elseif {$check_pplib_post == 0} {
+
+					set flag(pscname,$customerversion,$customer_string,$n) "$n"
+
+					set flag(rel_version,$customerversion,$customer_string,$n) "no_pplib "
+					#append flag(pp_source_file,$customerversion,$customer_string,$n) "-"
+
+					lappend flag(postprocessor,$customerversion,$customer_string) "$context.ueproject add command -label \"$n\" -command {create_ueproject $n}"
+					set flag(find_postprocessor) 1
+
+				}
+
+			}
+		}
+	}
+
+	if {!$flag(find_postprocessor)} {
+		lappend flag(postprocessor,$customerversion,$customer_string) "$context.ueproject add command -label \"No post processor found in customer environment\" -state disabled"
+	}
+
+	if {[info exists flag(postprocessor,$customerversion,$customer_string)]} {
+		button_ueproject $flag(postprocessor,$customerversion,$customer_string)
+	}
+
+	set progress 0
+	progress 0
+
+	snapshot LOAD $snapshot(1)
+
+	.information.info configure -text "$customer_string"; update
+
+}
+
+proc button_ueproject {button} {
+
+	global customer_dir_path customerversion customer_string
+	
+	foreach e $button {
+		regexp -nocase -- {create_ueproject.([^\}]+)} $e dummy name
+		if {[info exists name] && [file exists [file join $customer_dir_path $customerversion $customer_string "UEProjects" ${name}.prj]]} {
+			append e " -foreground blue"
+			unset name
+		}
+		eval $e
+	}	
+
+}
+
+proc check_pplib_post {mkname} {
+
+	global flag customer_string customerversion
+	global std_pplib_version je_pp_source_file
+
+	#enhancement for pplib posts
+	#we search in the post directory according the following rules:
+	#1. basename exists in .tcl and .def
+	#2. .tcl has the following three procedure calls inside:
+	#PPLIB_DataSource_Main, PPLIB_DataSource_MakeCleanUp, PPLIB_DataSource_DebugInformation
+	#make sure no proc stands before - it must be a function call
+
+	set ispplib -1
+	set tmp [LIB_Shell_file_glob $flag(srcdir,$customerversion,$customer_string,$mkname) f]
+	set checkpost ""
+
+	foreach e [lsearch -regexp -all -inline $tmp {\w+.tcl}] {
+		set expression "regexp -all -nocase \{[file rootname $e]\[.\]\} \$tmp"
+		set count [eval $expression]
+		if {$count == 2} {
+			if {[lsearch $e $checkpost] == -1} {lappend checkpost $e}
+		}
+	}
+
+	foreach e $checkpost {
+		set filename [file join $flag(srcdir,$customerversion,$customer_string,$mkname) $e]
+
+		set tmp [file_to_list $filename]
+		if {[lsearch -regexp $tmp PPLIB_DataSource_Main] >= 0 && \
+		    [lsearch -regexp $tmp PPLIB_DataSource_MakeCleanUp] >= 0 && \
+		    [lsearch -regexp $tmp PPLIB_DataSource_DebugInformation] >= 0} {
+
+		    	evaluate_pplib_handler $filename
+
+			if {[info exists std_pplib_version]} {
+				append flag(rel_version,$customerversion,$customer_string,$mkname)   "$std_pplib_version "
+				set ispplib 1
+			} elseif {[llength [info commands Anfangsbewegung]]} {
+				append flag(rel_version,$customerversion,$customer_string,$mkname)   "pplib_1.4 "
+				set ispplib 1
+			}
+		} else {
+			set ispplib 0
+		}
+	}
+
+	return $ispplib
+}
+
+#______________________________________________________________
+# this proc 'sources' a pplib filehandler in order to access
+# the necessary variables afterwards
+# these are mainly: std_pplib_version and je_pp_source_file
+#______________________________________________________________
+proc evaluate_pplib_handler {filename} {
+
+	set ::filename $filename
+
+	uplevel #0 {
+
+		proc unknown {args} {}
+
+		catch {unset std_pplib_version}
+		catch {unset je_pp_source_file}
+
+		catch {source_silent $filename passive}
+	}
+
+}
+
+proc change_entry {name ele m} {
+
+	global custom_env
+
+	regsub ::custom_env\\( $ele "" ele
+	set custom_env([lindex [split $ele ","] 0],modification) 1
+	set custom_env(modification) 1
+}
+
+proc write_custom {} {
+
+	global custom_env custom_filename
+
+	if {$custom_env(modification) == 0} {destroy .line}
+
+	if {[file exists $custom_filename]} {
+
+		file_delete "[file rootname $custom_filename].bak"
+		file copy -force $custom_filename "[file rootname $custom_filename].bak"
+
+		set id [open $custom_filename w+]
+
+		for { set n 0 } { $n < $custom_env(length) } { incr n } {
+			if {![info exists custom_env($n,modification)] || $custom_env($n,modification) == 0} {
+				puts $id $custom_env($n)
+			} else {
+				if {$custom_env($n,status) == "Inactive"} {
+					set status "#"
+				} else {
+					set status ""
+				}
+				puts $id "$status$custom_env($n,envvar)=$custom_env($n,value)"
+			}
+		}
+
+		flush $id
+		close $id
+
+
+	}
+	destroy .line
+
+}
+
+set custom_env_filename ""
+set custom_env_file ""
+set custom_env_org_filename ""
+set customer_config_file(list) ""
+set custom_env(length) 0
+
+proc modify_custom {action {variable ""} {value ""}} {
+
+	eval global [uplevel #0 info vars]
+
+	# Datei wie folgt ablegen im Kundenordner
+	# "H:\Customer\v12\Maenner_Bahlingen\custom_config.dat"
+
+	# # Exampe <button> <label> <underline> <variable> <command>
+	# <button> Config <label> Konfiguration Drehen <underline> 0 <variable> {customer_config_UGII_CAM_CONFIG(drehen)} <command> {customer_config_UGII_CAM_CONFIG drehen}
+	# UGII_CAM_CONFIG=${UGII_CAM_CONFIG_DIR}mg-dr.dat
+	# <button> Config <label> Konfiguration HSC <underline> 0 <variable> {customer_config_UGII_CAM_CONFIG(hsc)} <command> {customer_config_UGII_CAM_CONFIG hsc}
+	# UGII_CAM_CONFIG=${UGII_CAM_CONFIG_DIR}mg-hsc.dat
+	# <button> Config <label> Konfiguration Fräsen <underline> 0 <variable> {customer_config_UGII_CAM_CONFIG(fraesen)} <command> {customer_config_UGII_CAM_CONFIG fraesen}
+	# UGII_CAM_CONFIG=${UGII_CAM_CONFIG_DIR}mg-fr.dat
+	# <separator>
+	# <button> Standort <label> Standort Bahlingen <underline> 0 <variable> {customer_config_STANDORT(bahlingen)} <command> {customer_config_STANDORT bahlingen}
+	# STANDORT=bah
+	# <button> Standort <label> Standort Au <underline> 0 <variable> {customer_config_STANDORT(au)} <command> {customer_config_STANDORT au}
+	# STANDORT=au
+
+	if {![info exists custom_env_file] || [string length $custom_env_file] == 0} {
+		set custom_env_filename [file join $customer_dir_path $customerversion $customer_string "custom_env.dat"]
+		set custom_env_file [file_to_list $custom_env_filename]
+		set custom_env(length) [llength $custom_env_file]
+	}
+
+	switch -- $action {
+		"read" {
+			for { set n 0 } { $n < $custom_env(length) } { incr n } {
+				if {[regexp -nocase -- {(.+)=(.*)} [lindex $custom_env_file $n] all envvar value]} {
+					if {[regsub "#" $envvar "" envvar]} {continue}
+					if {[string match $variable $envvar]} {
+						return [list $value $all]
+					}
+				}
+			}
+		}
+		"set" {
+			# Deactivate toggle
+			global $variable
+			foreach e [array names $variable] {
+				if {[regsub ",value" $e "" dummy] || [regsub ",org" $e "" dummy]} {continue}
+				set $variable\($e\) 0
+			}
+			set $variable\($value\) 1
+
+			set custom_env_org_filename [file join $customer_dir_path $customerversion $customer_string "custom_env.org"]
+
+			if {![info exists customer_config_file(list)] || ![llength $customer_config_file(list)]} {
+				set customer_config_file(list) $custom_env_file
+			}
+			set customer_config_file(length) [llength $customer_config_file(list)]
+
+			set customer_config_file(list,new) ""
+
+			for { set n 0 } { $n < $customer_config_file(length) } { incr n } {
+				if {[regexp -nocase -- {(.+)=(.*)} [lindex $customer_config_file(list) $n] all envvar data] && ![regsub "#" $envvar "" dummy]} {
+					if {[string match [lindex [subst $$variable\($value,value\)] 0] $envvar] && [string match [subst $$variable\($value\)] 1]} {
+						lappend customer_config_file(list,new) [subst $$variable\($value,org\)]
+					} else {
+						lappend customer_config_file(list,new) [lindex $customer_config_file(list) $n]
+					}
+				} else {
+					lappend customer_config_file(list,new) [lindex $customer_config_file(list) $n]
+				}
+			}
+			set customer_config_file(list) $customer_config_file(list,new)
+		}
+		"write" {
+			if {$custom_env_org_filename == ""} {return}
+			if {[file exists $custom_env_filename] && [file exists $custom_env_org_filename]} {file delete -force $custom_env_org_filename}
+			file rename $custom_env_filename $custom_env_org_filename
+			if {[file exists $custom_env_filename]} {file delete -force $custom_env_filename}
+			list_to_file $customer_config_file(list) $custom_env_filename
+		}
+		"cleanup" {
+			if {$custom_env_org_filename == ""} {return ""}
+			return "IF EXIST \"[file nativename $custom_env_org_filename]\" DEL /Q \"[file nativename $custom_env_filename]\""
+		}
+		"rename" {
+			if {$custom_env_org_filename == ""} {return ""}
+			return "IF EXIST \"[file nativename $custom_env_org_filename]\" RENAME \"[file nativename $custom_env_org_filename]\" \"[file tail $custom_env_filename]\""
+		}
+	}
+
+}
+
+proc display_custom {} {
+
+	global color custom_env custom_count custom_filename
+
+	set custom_count 0
+	set custom_filename [file join $::customer_dir_path $::customerversion $::customer_string "custom_env.dat"]
+
+	set name(dummy) ""
+	toplevel .line
+	wm title .line "Customer Environment"
+	wm protocol .line WM_DELETE_WINDOW {destroy .line}
+	wm geometry .line 120x30+260+260
+	wm minsize .line 115 30
+	wm maxsize .line 125 60
+	bind .line <Control-q> {destroy .line}
+
+	set color LightSteelBlue1
+	add_frame  "Window to changes in environmental variables" $color 1
+	add_button "Open Filename: [file tail $custom_filename]" "[file join $custom_filename]" 60 center top 1
+
+	frame .line.frame -border 0 -relief sunken
+	button .line.frame.close -text Close -command {destroy .line} -width 10
+	button .line.frame.save -text Save -command {write_custom} -width 10
+	pack configure .line.frame -padx 10 -pady 5 -side top
+	pack configure .line.frame.save .line.frame.close -padx 10 -pady 5 -side left
+
+	text .line.t -yscrollcommand ".line.scroll set" -setgrid true -width 40 -height 10 -wrap word -bg gray98
+	scrollbar .line.scroll -command ".line.t yview"
+	pack .line.scroll -side right -fill y
+	pack .line.t -expand yes -fill both
+
+	set color white
+	set file [file_to_list $custom_filename]
+	if {[info exists custom_env]} {unset custom_env}
+	set custom_env(modification) 0
+	set custom_env(length) [llength $file]
+	for { set n 0 } { $n < $custom_env(length) } { incr n } {
+		if {[regexp -nocase -- {(.+)=(.*)} [lindex $file $n] all envvar value]} {
+			set continue 0
+			foreach e {CUSTOM UGII_POST_POOL_DIR UGII_POST_POOL_DIR_NG} {
+				if {[regexp $e $envvar]} {
+					set custom_env($n) [lindex $file $n]
+					set continue 1
+				}
+			}
+			if {$continue} {continue}
+			if {[regsub "#" $envvar "" envvar]} {
+				set custom_env($n,status) Inactive
+			} else {
+				set custom_env($n,status) Active
+			}
+			set custom_env($n,envvar) [string trim $envvar]
+			set custom_env($n,value) $value
+			set custom_env($n,modification) 0
+
+			add_frame "" gray60
+			add_button "" "" 10 center left 0 ::custom_env($n,status)
+			set button [add_button "::custom_env($n,envvar)" "" 40]
+			if {$custom_env($n,status) == "Inactive"} {$button configure -fg grey50}
+			set button [add_button "::custom_env($n,value)" "" 120]
+			if {$custom_env($n,status) == "Inactive"} {$button configure -fg grey50}
+
+		}
+		set custom_env($n) [lindex $file $n]
+	}
+	bind all <MouseWheel> "+wheelEvent %X %Y %D"
+	update
+}
+
+proc debug {} {
+
+	catch {.information.info configure -text "[info level -1]"; update}
+
+}
+
+set startup_batch [file join $home_parent_path "${home_parent_file}.bat"]
+if {[file exists $startup_batch]} {file_delete $startup_batch}
+set startup_info [file join $home_parent_path "${home_parent_file}.info"]
+if {[file exists $startup_info]} {file_delete $startup_info}
+
+JETIO::NewFile
+JETIO::IsRunning init
+check_file
+read_default
+change_button
+tkupdate_silent
+update idletasks

@@ -1,0 +1,12 @@
+VERSION 130
+!
+!  This script will insert UGZipC in the File->Export menu
+!  To be placed in your startup-directory
+!
+EDIT UG_GATEWAY_MAIN_MENUBAR
+
+AFTER UG_FILE_EXPORT_INVENTOR_3D
+   BUTTON UGZIPC_BTTN
+   LABEL Zip Assembly...
+   ACTIONS ugzipc.dlg
+END_OF_AFTER
