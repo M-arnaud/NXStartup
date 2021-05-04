@@ -154,8 +154,8 @@ namespace eval ::JETIO {
 	variable serverpath "\\\\JED.local\\JEx\\MachineKits\\PP\\Tools\\TIO\\"
 }
 
-set windowswidth 352
-set windowshigh 588
+set windowswidth 362
+set windowshigh 705
 
 # Path for BeyondCompare
 set beyond_compare 		[file join $env(ProgramFiles\(x86\)) "Beyond Compare 4" "BCompare.exe"]
@@ -2129,8 +2129,11 @@ proc now {{call 0}} {
 	puts $batch_file "call $startbatch_file"
         ####Modification arno
         puts $batch_file "\n"
-	puts $batch_file "subst w: /d"
-	puts $batch_file "subst w: %JE_CUSTOMER_PATH%/custom/library/machine/installed_machines"
+	puts $batch_file "subst z: /d"
+	puts $batch_file "subst z: %JE_CUSTOMER_PATH%/custom/library/machine/installed_machines"
+	puts $batch_file "\n"
+	puts $batch_file "subst y: /d"
+	puts $batch_file "subst y: %JE_CUSTOMER_PATH%"
 	puts $batch_file "\n"
 	
 	if { $JETIO::runNow } {
